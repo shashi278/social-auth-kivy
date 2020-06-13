@@ -4,7 +4,7 @@
 ![demo.gif](demo.gif)
 
 ### Note:
-* Google and Facebook logins have been implemented natively
+* Google and Facebook logins have been implemented natively. See [docs](docs/integrate-google-facebook-login.md) for implementation.
 * Firebase has been used for integrating Github and Twitter logins
 
 ### Build Yourself
