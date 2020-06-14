@@ -68,6 +68,153 @@
  
  ```
  
+##
 
 ### Facebook Login:
-#### coming soon
+
+#### Prerequisite
+* We'll be creating our own version of facebook login i.e. using python and kivy by following each step from their [doc](https://developers.facebook.com/docs/facebook-login/android/). So, open it in a new tab and follow it along-side.
+
+#### Start Integrating
+* Follow their instructions in step 1 and create an OAuth App. You may skip step 2.
+
+* For step 3, add Facebook-login SDK as a gradle dependency in your `buildozer.spec` file:
+ ```spec
+ android.gradle_dependencies = com.facebook.android:facebook-login:7.0.0
+ ```
+
+* For 4th step,
+  * Add `INTERNET` permission in `buildozer.spec` file
+    ```spec
+    android.permissions = INTERNET
+    ```
+  * Find `android.meta_data` in buildozer.spec file and make it to look like
+    ```spec
+    android.meta_data = com.facebook.sdk.ApplicationId=fb<App-ID-of-your-OAuth-App>
+    ```
+  * Next, find `android.add_activities` in buildozer.spec file and add some activity classes
+    ```spec
+    android.add_activites = com.facebook.FacebookActivity, com.facebook.CustomTabActivity
+    ```
+  * Lastly, create an xml file in the same directory as `main.py`. Name it whatever you like and add this into that xml file
+    ```xml
+    <intent-filter>
+             <action android:name="android.intent.action.VIEW" />
+             <category android:name="android.intent.category.DEFAULT" />
+             <category android:name="android.intent.category.BROWSABLE" />
+         </intent-filter>
+    ```
+    Now add this xml as an intent filter in the spec file
+    ```spec
+    android.manifest.intent_filters = <file-name>.xml
+    ```
+
+* Do as instructed in step 5 and 6
+
+* Skip steps 7 and 8
+
+* For next steps, we'll be implementing few java interfaces in python.
+  
+  * Include few required java classes:
+    ```python
+    #----Java Classes For Facebook Login----#
+    AccessToken= autoclass('com.facebook.AccessToken')
+    CallbackManagerFactory= autoclass('com.facebook.CallbackManager$Factory')
+    FacebookCallback= autoclass('com.facebook.FacebookCallback')
+    FacebookException= autoclass('com.facebook.FacebookException')
+    FacebookSdk= autoclass('com.facebook.FacebookSdk')
+    LoginManager= autoclass('com.facebook.login.LoginManager')
+    GraphRequest= autoclass('com.facebook.GraphRequest')
+    ImageRequest= autoclass('com.facebook.internal.ImageRequest')
+
+    ```
+  * Now, to respond to a login result, you need to register a callback with `LoginManager`. Before that, 
+    we need to implement `GraphJSONObjectCallback` class which will be used when login request succeeds and within which
+    we can get user information(like, name, email, etc.)
+    ```python
+    class PythonGraphJSONObjectCallback(PythonJavaClass):
+        __javainterfaces__= ['com/facebook/GraphRequest$GraphJSONObjectCallback']
+        __javacontext__= 'app'
+
+        @java_method('(Lorg/json/JSONObject;Lcom/facebook/GraphResponse;)V')
+        def onCompleted(self, me, response):
+            if response.getError():
+                #handle error
+                
+            else:
+            
+                if AccessToken.isCurrentAccessTokenActive():
+                    access_token= AccessToken.getCurrentAccessToken().getToken()
+                else:
+                    access_token= ""
+
+                uri= ImageRequest.getProfilePictureUri(
+                    me.optString("id"),  #user id
+                    100,                 #image height
+                    100,                 #image width
+                    access_token         #access token
+                )
+                
+                # user has been logged in. Get other info
+                # and do after login stuffs(like, updating UI, etc.)
+    ```
+  
+  * Next, we need to implement `FacebookCallback` class which will be registered with `LoginManager`.
+    ```python
+    class PythonFacebookCallback(PythonJavaClass):
+        __javainterfaces__= ['com/facebook/FacebookCallback']
+        __javacontext__= 'app'
+
+        @java_method('(Ljava/lang/Object;)V')
+        def onSuccess(self, result):
+
+            request= GraphRequest.newMeRequest(
+                result.getAccessToken(),
+                PythonGraphJSONObjectCallback()
+            )
+
+            params= Bundle()
+            params.putString("fields", "last_name,first_name,email")
+            request.setParameters(params)
+            request.executeAsync()
+
+
+        @java_method('()V')
+        def onCancel(self):
+            #Login has been cancelled
+            
+
+        @java_method('(Lcom/facebook/FacebookException;)V')
+        def onError(self, error):
+            #Error in logging in
+            
+    ```
+  
+  * We then need o initialize Facebook SDK inside App's `build` method:
+    ```python
+    FacebookSdk.sdkInitialize(context.getApplicationContext())
+    ```
+  * And then register the callback with `LoginManager` inside `build` method:
+    ```python
+    mCallbackManager = CallbackManagerFactory.create()
+    mFacebookCallback = PythonFacebookCallback()
+    self.mLoginMgr = LoginManager.getInstance()
+    self.mLoginMgr.registerCallback(mCallbackManager, mFacebookCallback)
+    ```
+  * Finally, in your `onActivityResult` method, call `callbackManager.onActivityResult` to pass the login results to the `LoginManager` via `callbackManager`. For this we just need to add one more line to our `build` method:
+    ```python
+    result_bind(on_activity_result=mCallbackManager.onActivityResult)
+    ```
+    Make sure you've `result_bind` imported:
+    ```python
+    from android.activity import bind as result_bind
+    ```
+  
+  * Finally, perform the actual login with required scopes upon clicking a button. Add below codes inside a function to be called upon a button's pressing/releasing event. 
+  ```python
+  self.mLoginMgr.logInWithReadPermissions(
+                cast(autoclass('android.app.Activity'),
+                context), Arrays.asList("email", "public_profile")
+                )
+  ```
+    
