@@ -12,6 +12,7 @@
 * Contains a debug apk in [bin](https://github.com/shashi278/social-auth-kivy/tree/master/bin) directory.
 
 ### TODO:
+* Make it a sole package so that everyone don't need to write all those codes everytime. 
 * I'm not sure why `AsyncImage` is not working for me and not showing any profile picture.
 
 ##
