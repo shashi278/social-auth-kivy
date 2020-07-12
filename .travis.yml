@@ -1,0 +1,25 @@
+cache: pip
+
+matrix:
+  fast_finish: true
+  include:
+    - name: "Black"
+      env: RUN=black
+      language: python
+      python: 3.7
+      os: linux
+      dist: bionic
+
+after_failure:
+  - sleep 10;
+  - echo == End ==
+
+deploy:
+  skip_existing: true
+  provider: pypi
+  user: "__token__"
+  password:
+    secure: "pypi-AgEIcHlwaS5vcmcCJGM3M2I5M2Y1LTQ3NDQtNDNhMi04M2E3LWQ0YTY2YzE4Mjk5ZAACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYg70xixGL_CDgiTRvzec-ncAUtgDpOkDxszyyh99kwAJI"
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
