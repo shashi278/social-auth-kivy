@@ -1,7 +1,7 @@
 # social-auth-kivy
 #### *Integrate Google, Facebook, Github &amp; Twitter login in kivy applications*
 
-![demo.gif](demo.gif)
+![demo.gif](demo/demo.gif)
 
 ###
 #### Google and Facebook logins have been implemented natively. See [here](docs/integrate-google-facebook-login.md) to implement it yourself.
