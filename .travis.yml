@@ -10,6 +10,8 @@ matrix:
       os: linux
       dist: bionic
 
+script: black kivyauth/*.py
+
 after_failure:
   - sleep 10;
   - echo == End ==
