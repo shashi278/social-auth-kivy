@@ -8,8 +8,6 @@ from kivy.uix.image import AsyncImage
 from kivy.metrics import dp
 
 import os
-import sys
-sys.path.append("../")
 
 from kivyauth.initialize import initialize_google, initialize_fb, initialize_firebase
 from kivyauth.logins import login_google, login_facebook, login_github, login_twitter, logout, login_providers
