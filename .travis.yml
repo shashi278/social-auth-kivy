@@ -11,9 +11,9 @@ matrix:
       dist: bionic
 
 install:
-- pip install black
+- pip install pycodestyle
 script:
-- black kivyauth/*.py
+- pycodestyle kivyauth/*.py
 
 after_failure:
   - sleep 10;
