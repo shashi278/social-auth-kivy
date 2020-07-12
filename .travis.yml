@@ -10,7 +10,10 @@ matrix:
       os: linux
       dist: bionic
 
-script: black kivyauth/*.py
+install:
+- pip install pycodestyle
+script:
+- pycodestyle kivyauth/*.py
 
 after_failure:
   - sleep 10;
