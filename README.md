@@ -3,7 +3,7 @@
 ![build](https://travis-ci.org/shashi278/social-auth-kivy.svg?branch=master) [![Python 3.6](https://img.shields.io/pypi/pyversions/kivymd)](https://www.python.org/downloads/release/python-360/) ![pypi](https://img.shields.io/pypi/v/kivyauth) ![license](https://img.shields.io/pypi/l/kivyauth) ![format](https://img.shields.io/pypi/format/kivyauth) ![downloads](https://img.shields.io/pypi/dm/kivyauth) 
 
 ###
-![demo.gif](demo/demo.gif)
+![Demo Gif](demo/demo.gif)
 
 ##
 ### Installation
@@ -49,7 +49,7 @@ logout(self.current_provider, self.after_logout)
 requirements = python3,kivy,kivyauth
 ```
 
-* See [demo](demo/) for refrence
+* See [demo](demo/) for reference
 
 A more comprehensive documentation is on it's way.
 
