@@ -1,5 +1,6 @@
-# social-auth-kivy
+# KivyAuth
 #### *Integrate Google, Facebook, Github &amp; Twitter login in kivy applications*
+![](https://travis-ci.org/shashi278/social-auth-kivy.svg?branch=master)
 
 ![demo.gif](demo/demo.gif)
 
