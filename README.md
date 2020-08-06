@@ -1,48 +1,39 @@
 # KivyAuth
 #### *Integrate Google, Facebook, Github &amp; Twitter login in kivy applications*
-![build](https://travis-ci.org/shashi278/social-auth-kivy.svg?branch=master) [![Python 3.6](https://img.shields.io/pypi/pyversions/kivymd)](https://www.python.org/downloads/release/python-360/) ![pypi](https://img.shields.io/pypi/v/kivyauth) ![license](https://img.shields.io/pypi/l/kivyauth) ![format](https://img.shields.io/pypi/format/kivyauth) ![downloads](https://img.shields.io/pypi/dm/kivyauth) 
+[![build](https://travis-ci.org/shashi278/social-auth-kivy.svg?branch=master)](https://travis-ci.org/github/shashi278/social-auth-kivy/) [![Python 3.6](https://img.shields.io/pypi/pyversions/kivymd)](https://www.python.org/downloads/release/python-360/) [![pypi](https://img.shields.io/pypi/v/kivyauth)](https://pypi.org/project/KivyAuth/) [![license](https://img.shields.io/pypi/l/kivyauth)](https://github.com/shashi278/social-auth-kivy/blob/master/LICENSE) [![format](https://img.shields.io/pypi/format/kivyauth)](https://pypi.org/project/KivyAuth/#modal-close) [![downloads](https://img.shields.io/pypi/dm/kivyauth)](https://pypi.org/project/KivyAuth/)
 
 ###
 ![Demo Gif](demo/demo.gif)
 
 ##
-### Installation
-It can be installed via pip
-```bash
-pip install kivyauth
-```
 
 ### How to use
+Using this library is very easy.
 The example below shows the basic usage of the library by integrating google login.
 
 * Add [prerequisite](docs/integrate-google-facebook-login.md#prerequisite) for google login before proceeding further
 
-* Include necessary imports, for example, in case of google login
+* Include necessary imports for google login
 ```python
-from kivyauth.initialize import initialize_google
-from kivyauth.logins import login_google, logout, login_providers
+from kivyauth.google_auth import initialize_google, login_google, logout_google
 ```
 
 * Initialize google login inside your app's build method
 ```python
 def build(self):
   #..
-  self.mGSignInClient= initialize_google(self.success_listener, self.error_listener, RC_SIGN_IN)
+  initialize_google(self.after_login, self.error_listener)
   #..
 ```
-`success_listener` is a function to be called upon successful login with `name`, `email`, and `photo url` of the user. So, create a success listener function which accepts three parameters and perform after-login stuffs. `error_listener` doesn't accept any argument.
-`RC_SIGN_IN` is just a unique request code used to differentiate among different requests. Define it an integer constant.
+`after_login` is a function to be called upon successful login with `name`, `email`, and `photo url` of the user. So, create a success listener function which accepts three parameters and perform after-login stuffs. `error_listener` doesn't accept any argument.
 
-* Next, add below code inside a function to be called when user clicks the login button.
-```python
-login_google(self.mGSignInClient, RC_SIGN_IN)
-self.current_provider= login_providers.google
-```
+* Next, call `login_google()` upon a button click to initiate login process.
 
-* To logout
+* Similarly, to logout, call `logout_google` as
 ```python
-logout(self.current_provider, self.after_logout)
+logout_google(self.after_logout)
 ```
+`after_logout` is a function to be called after user gets logged out. For example, to update UI.
 
 * Make sure to include `kivyauth` as a requirement in the buildozer.spec file
 ```spec
@@ -52,6 +43,12 @@ requirements = python3,kivy,kivyauth
 * See [demo](demo/) for reference
 
 A more comprehensive documentation is on it's way.
+
+### Changelog
+#### v2.0
+  * Individual login providers are moved into respective folders
+  * Fix problem of not being able to use individual login methods
+  * Now it's relatively easier to use the library
 
 ### Other
 Feel free to ping me or raise issues if there's any difficulty in packaging it up.
