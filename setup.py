@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="KivyAuth",
-    version="1.0",
+    version="2.0",
     packages=["kivyauth"],
     package_data={"kivyauth": ["*.py"],},
     # metadata to display on PyPI

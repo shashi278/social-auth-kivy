@@ -2,15 +2,16 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang.builder import Builder
 from kivy.uix.boxlayout import BoxLayout
-from kivy.logger import Logger
 from kivy.clock import Clock
 from kivy.uix.image import AsyncImage
 from kivy.metrics import dp
 
 import os
 
-from kivyauth.initialize import initialize_google, initialize_fb, initialize_firebase
-from kivyauth.logins import login_google, login_facebook, login_github, login_twitter, logout, login_providers
+from kivyauth.google_auth import initialize_google, login_google, logout_google
+from kivyauth.facebook_auth import initialize_fb, login_facebook, logout_facebook
+from kivyauth.firebase_auth import initialize_firebase, login_github, login_twitter, logout_github, logout_twitter
+from kivyauth.providers import login_providers
 
 from kivymd.app import MDApp
 from kivymd.uix.button import RectangularElevationBehavior, MDRectangleFlatIconButton
@@ -26,12 +27,13 @@ os.environ['SSL_CERT_FILE']= certifi.where()
 Toast= autoclass('android.widget.Toast')
 String = autoclass('java.lang.String')
 CharSequence= autoclass('java.lang.CharSequence')
+Intent = autoclass('android.content.Intent')
+Uri = autoclass('android.net.Uri')
 
 PythonActivity= autoclass('org.kivy.android.PythonActivity')
 
 context= PythonActivity.mActivity
 RC_SIGN_IN= 999
-current_provider= ""
 
 @run_on_ui_thread
 def show_toast(text):
@@ -54,11 +56,11 @@ ScreenManager:
         orientation:"vertical"
 
         MDToolbar:
-            title: "Social Auth Kivy Demo"
+            title: "KivyAuth Demo"
             elevation:9
             opposite_colos: True
             left_action_items: [['menu', lambda x: None]]
-            right_action_items: [['information-outline', lambda x: None]]
+            right_action_items: [['source-fork', lambda x: app.send_to_github()]]
 
         BoxLayout:
             orientation:"vertical"
@@ -173,11 +175,11 @@ class RectangleRaisedIconButton(MDRectangleFlatIconButton, RectangularElevationB
     elevation_normal=16
         
 class LoginDemo(MDApp):
+    current_provider= ""
     def build(self):
-
-        self.mGSignInClient= initialize_google(self.after_login, self.error_listener, RC_SIGN_IN)
-        self.mList= initialize_fb(self.after_login, self.cancel_listener, self.error_listener)
-        initialize_firebase()
+        initialize_google(self.after_login, self.error_listener)
+        initialize_fb(self.after_login, self.cancel_listener, self.error_listener)
+        initialize_firebase(self.after_login, self.error_listener)
 
         return Builder.load_string(kv)
     
@@ -197,37 +199,41 @@ class LoginDemo(MDApp):
         pass
     
     def fb_login(self, *args):
-        login_facebook(self.mList)
-        global current_provider
-        current_provider= login_providers.facebook
+        login_facebook()
+        self.current_provider= login_providers.facebook
         
     def gl_login(self, *args):
-        login_google(self.mGSignInClient, RC_SIGN_IN)
-        global current_provider
-        current_provider= login_providers.google
+        login_google()
+        self.current_provider= login_providers.google
     
     def git_login(self, *args):
-        login_github(self.after_login, self.error_listener)
-        global current_provider
-        current_provider= login_providers.github
+        login_github()
+        self.current_provider= login_providers.github
 
     def twitter_login(self, *args):
-        login_twitter(self.after_login, self.error_listener)
-        global current_provider
-        current_provider= login_providers.twitter
+        login_twitter()
+        self.current_provider= login_providers.twitter
 
     def logout_(self):
-        logout(current_provider, self.after_logout)
+        #logout(current_provider, self.after_logout)
+        if self.current_provider==login_providers.google:
+            logout_google(self.after_logout)
+        if self.current_provider==login_providers.facebook:
+            logout_facebook(self.after_logout)
+        if self.current_provider==login_providers.github:
+            logout_github(self.after_logout)
+        if self.current_provider==login_providers.twitter:
+            logout_twitter(self.after_logout)
 
     def after_login(self, name, email, photo_uri):
-        show_toast('Logged in using {}'.format(current_provider))
+        show_toast('Logged in using {}'.format(self.current_provider))
         self.root.current= 'homescreen'
         self.update_ui(name, email, photo_uri)
 
     def after_logout(self):
         self.update_ui('','','')
         self.root.current= 'loginscreen'
-        show_toast('Logged out from {} login'.format(current_provider))
+        show_toast('Logged out from {} login'.format(self.current_provider))
     
     def update_ui(self, name, email, photo_uri):
         self.root.ids.home_screen.ids.user_photo.add_widget(AsyncImage(source=photo_uri, size_hint=(None, None), height=dp(60), width=dp(60)))
@@ -239,6 +245,15 @@ class LoginDemo(MDApp):
     
     def error_listener(self):
         show_toast("Error logging in.")
+    
+    def send_to_github(self):
+        intent = Intent()
+        intent.setAction(Intent.ACTION_VIEW)
+        intent.setData(Uri.parse('https://github.com/shashi278/social-auth-kivy'))
+
+        context.startActivity(intent)
+
+
 
 if __name__ == "__main__":
     LoginDemo().run()
