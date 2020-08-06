@@ -25,7 +25,7 @@ def build(self):
   initialize_google(self.after_login, self.error_listener)
   #..
 ```
-`success_listener` is a function to be called upon successful login with `name`, `email`, and `photo url` of the user. So, create a success listener function which accepts three parameters and perform after-login stuffs. `error_listener` doesn't accept any argument.
+`after_login` is a function to be called upon successful login with `name`, `email`, and `photo url` of the user. So, create a success listener function which accepts three parameters and perform after-login stuffs. `error_listener` doesn't accept any argument.
 
 * Next, call `login_google()` upon a button click to initiate login process.
 
