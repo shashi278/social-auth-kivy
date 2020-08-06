@@ -39,7 +39,9 @@ class GoogleActivityListener:
                     )
 
             except Exception as e:
-                Logger.info("KivyAuth: Error signing in using Google. {}".format(e))
+                Logger.info(
+                    "KivyAuth: Error signing in using Google. {}".format(e)
+                    )
                 self.error_listener()
 
 
