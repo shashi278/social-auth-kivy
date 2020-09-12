@@ -13,7 +13,7 @@ matrix:
 install:
 - pip install pycodestyle
 script:
-- pycodestyle kivyauth/*.py
+- pycodestyle kivyauth/*
 
 after_failure:
   - sleep 10;
