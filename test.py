@@ -9,9 +9,9 @@ import time
 
 # google configurations
 GOOGLE_CLIENT_ID = (
-    "161589307268-8nn5amnk5ba79tj4tbkht5dobiff5nsb.apps.googleusercontent.com"
+    "Your-google-client-id"
 )
-GOOGLE_CLIENT_SECRET = "CwEd_BZrrwjprk8ZS5L9Soaa"
+GOOGLE_CLIENT_SECRET = "your-google-client-secret"
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 app = Flask(__name__)
@@ -19,14 +19,14 @@ app.secret_key = os.urandom(26)
 
 email_verified= False
 
-client_id="161589307268-8nn5amnk5ba79tj4tbkht5dobiff5nsb.apps.googleusercontent.com"
+# client_id="161589307268-8nn5amnk5ba79tj4tbkht5dobiff5nsb.apps.googleusercontent.com"
 
-url= (
-    "https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&"
-    #"state=security_token%3D138r5719ru3e1%26url%3Dhttps%3A%2F%2Foauth2.example.com%2Ftoken&"
-    "redirect_uri=http%3A//127.0.0.1%3A9004&"
-    "client_id={}"
-).format(client_id)
+# url= (
+#     "https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&"
+#     #"state=security_token%3D138r5719ru3e1%26url%3Dhttps%3A%2F%2Foauth2.example.com%2Ftoken&"
+#     "redirect_uri=http%3A//127.0.0.1%3A9004&"
+#     "client_id={}"
+# ).format(client_id)
 
 
 
