@@ -51,6 +51,7 @@ requirements = python3,kivy,kivyauth
   * Now it's relatively easier to use the library
   
 ### TODO:
+  * Auto login feature
   * Make it cross-platform
 
 ### Other
