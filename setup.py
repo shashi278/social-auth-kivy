@@ -5,9 +5,11 @@ with open("README.md", "r") as fh:
 
 setup(
     name="KivyAuth",
-    version="2.1",
+    version="2.2",
     packages=["kivyauth"],
-    package_data={"kivyauth": ["*.py"],},
+    package_data={
+        "kivyauth": ["*.py"],
+    },
     # metadata to display on PyPI
     author="Shashi Ranjan",
     author_email="shashiranjankv@gmail.com",
@@ -21,6 +23,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Android",
     ],
-    install_requires=["kivy",],
+    install_requires=[
+        "kivy",
+    ],
     python_requires=">=3.6",
 )
