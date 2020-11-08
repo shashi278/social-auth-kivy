@@ -1,6 +1,6 @@
-from kivy.logger import Logger
-from jnius import autoclass, cast, PythonJavaClass, java_method
 from android.activity import bind as result_bind
+from jnius import PythonJavaClass, autoclass, cast, java_method
+from kivy.logger import Logger
 
 CallbackManagerFactory = autoclass("com.facebook.CallbackManager$Factory")
 FacebookSdk = autoclass("com.facebook.FacebookSdk")
@@ -17,6 +17,9 @@ PythonActivity = autoclass("org.kivy.android.PythonActivity")
 context = PythonActivity.mActivity
 mLoginMgr = None
 mList = None
+
+
+__all__ = ("initialize_fb", "login_facebook", "logout_facebook")
 
 
 class PythonGraphJSONObjectCallback(PythonJavaClass):
@@ -91,6 +94,14 @@ class PythonFacebookCallback(PythonJavaClass):
 
 
 def initialize_fb(success_listener, cancel_listener, error_listener):
+    """
+    Function to initialize facebook login.
+    Must be called inside `build` method of kivy App before actual login.
+
+    :param: `success_listener` - Function to be called on login success
+    :param: `cancel_listener` - Function to be called on login cancel
+    :param: `error_listener` - Function to be called on login error
+    """
     FacebookSdk.sdkInitialize(context.getApplicationContext())
     mCallbackManager = CallbackManagerFactory.create()
     mFacebookCallback = PythonFacebookCallback(
@@ -104,6 +115,9 @@ def initialize_fb(success_listener, cancel_listener, error_listener):
 
 
 def login_facebook():
+    """
+    Function to login using facebook
+    """
     Logger.info("KivyAuth: Initiated facebook login")
     global mLoginMgr
     mLoginMgr = LoginManager.getInstance()
@@ -114,7 +128,22 @@ def login_facebook():
     )
 
 
+def auto_facebook():
+    """
+    Auto login using Facebook. You may call it `on_start`.
+    """
+    accessToken = AccessToken.getCurrentAccessToken()
+    if accessToken and not accessToken.isExpired():
+        login_facebook()
+        return True
+
+
 def logout_facebook(after_logout):
+    """
+    Logout from facebook login
+
+    :param: `after_logout` - Function to be called after logging out
+    """
     mLoginMgr.logOut()
     after_logout()
     Logger.info("KivyAuth: Logged out from facebook login")

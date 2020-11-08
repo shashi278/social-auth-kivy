@@ -1,6 +1,6 @@
-from kivy.logger import Logger
-from jnius import autoclass, PythonJavaClass, java_method
 from android.activity import bind as result_bind
+from jnius import PythonJavaClass, autoclass, java_method
+from kivy.logger import Logger
 
 FirebaseAuth = autoclass("com.google.firebase.auth.FirebaseAuth")
 OAuthProvider = autoclass("com.google.firebase.auth.OAuthProvider")
@@ -11,6 +11,14 @@ context = PythonActivity.mActivity
 
 event_success_listener = None
 event_error_listener = None
+
+__all__ = (
+    "initialize_firebase",
+    "login_github",
+    "login_twitter",
+    "logout_github",
+    "logout_twitter",
+)
 
 
 class OnSuccessListener(PythonJavaClass):
@@ -26,11 +34,7 @@ class OnSuccessListener(PythonJavaClass):
         Logger.info("KivyAuth: Sign in successful using firebase.")
         user = FirebaseAuth.getInstance().getCurrentUser()
 
-        self.success_listener(
-            user.getDisplayName(),
-            user.getEmail(),
-            user.getPhotoUrl().toString()
-        )
+        _call_success(user)
 
 
 class OnFailureListener(PythonJavaClass):
@@ -47,7 +51,20 @@ class OnFailureListener(PythonJavaClass):
         self.error_listener()
 
 
+def _call_success(user):
+    event_success_listener(
+        user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString()
+    )
+
+
 def initialize_firebase(success_listener, error_listener):
+    """
+    Function to initialize firebase login.
+    Must be called inside `build` method of kivy App before actual login.
+
+    :param: `success_listener` - Function to be called on login success
+    :param: `error_listener` - Function to be called on login error
+    """
     FirebaseAuth.getInstance()
     Logger.info("KivyAuth: Initialized firebase auth")
     global event_success_listener
@@ -65,8 +82,7 @@ def firebase_login(provider):
             OnSuccessListener(event_success_listener)
         )
         task = task.addOnFailureListener(
-            OnFailureListener(event_error_listener)
-            )
+            OnFailureListener(event_error_listener))
     else:
         # There's no pending result so you need to start the sign-in flow.
 
@@ -74,11 +90,9 @@ def firebase_login(provider):
             context, provider.build()
         )
         task = task.addOnSuccessListener(
-            OnSuccessListener(event_success_listener)
-            )
+            OnSuccessListener(event_success_listener))
         task = task.addOnFailureListener(
-            OnFailureListener(event_error_listener)
-            )
+            OnFailureListener(event_error_listener))
 
 
 def firebase_logout(after_logout):
@@ -88,21 +102,44 @@ def firebase_logout(after_logout):
     Logger.info("KivyAuth: Logged out from firebase auth")
 
 
+def auto_firebase():
+    user = FirebaseAuth.getInstance().getCurrentUser()
+    if user:
+        _call_success(user)
+        return True
+
+
 def login_github():
+    """
+    Function to login using github
+    """
     Logger.info("KivyAuth: Initiated github login")
     provider = OAuthProvider.newBuilder("github.com")
     firebase_login(provider)
 
 
 def login_twitter():
+    """
+    Function to login using twitter
+    """
     Logger.info("KivyAuth: Initiated twitter login")
     provider = OAuthProvider.newBuilder("twitter.com")
     firebase_login(provider)
 
 
 def logout_twitter(after_logout):
+    """
+    Logout from twitter login
+
+    :param: `after_logout` - Function to be called after logging out
+    """
     firebase_logout(after_logout)
 
 
 def logout_github(after_logout):
+    """
+    Logout from github login
+
+    :param: `after_logout` - Function to be called after logging out
+    """
     firebase_logout(after_logout)
