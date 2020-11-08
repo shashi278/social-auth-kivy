@@ -1,46 +1,42 @@
-from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang.builder import Builder
-from kivy.uix.boxlayout import BoxLayout
-from kivy.clock import Clock
-from kivy.uix.image import AsyncImage
-from kivy.metrics import dp
-
 import os
 
-from kivyauth.google_auth import initialize_google, login_google, logout_google
-from kivyauth.facebook_auth import initialize_fb, login_facebook, logout_facebook
-from kivyauth.firebase_auth import initialize_firebase, login_github, login_twitter, logout_github, logout_twitter
-from kivyauth.providers import login_providers
-
-from kivymd.app import MDApp
-from kivymd.uix.button import RectangularElevationBehavior, MDRectangleFlatIconButton
-from kivymd.uix.toolbar import MDToolbar
-
-from jnius import autoclass, cast
-from android.runnable import run_on_ui_thread
-
 import certifi
+from android.runnable import run_on_ui_thread
+from jnius import autoclass, cast
+from kivy.lang.builder import Builder
+from kivy.metrics import dp
+from kivy.uix.image import AsyncImage
+from kivy.uix.screenmanager import Screen
+from kivymd.app import MDApp
+from kivymd.uix.button import (MDRectangleFlatIconButton,
+                               RectangularElevationBehavior)
 
-os.environ['SSL_CERT_FILE']= certifi.where()
+from kivyauth import auto_login, login_providers
+from kivyauth.facebook_auth import *
+from kivyauth.firebase_auth import *
+from kivyauth.google_auth import *
 
-Toast= autoclass('android.widget.Toast')
-String = autoclass('java.lang.String')
-CharSequence= autoclass('java.lang.CharSequence')
-Intent = autoclass('android.content.Intent')
-Uri = autoclass('android.net.Uri')
+os.environ["SSL_CERT_FILE"] = certifi.where()
 
-PythonActivity= autoclass('org.kivy.android.PythonActivity')
+Toast = autoclass("android.widget.Toast")
+String = autoclass("java.lang.String")
+CharSequence = autoclass("java.lang.CharSequence")
+Intent = autoclass("android.content.Intent")
+Uri = autoclass("android.net.Uri")
 
-context= PythonActivity.mActivity
-RC_SIGN_IN= 999
+PythonActivity = autoclass("org.kivy.android.PythonActivity")
+
+context = PythonActivity.mActivity
+RC_SIGN_IN = 999
+
 
 @run_on_ui_thread
 def show_toast(text):
-    t= Toast.makeText(context, cast(CharSequence, String(text)), Toast.LENGTH_SHORT)
+    t = Toast.makeText(context, cast(CharSequence, String(text)), Toast.LENGTH_SHORT)
     t.show()
 
-kv="""
+
+kv = """
 #:import Clock kivy.clock.Clock
 ScreenManager:
     
@@ -168,91 +164,103 @@ ScreenManager:
 
 """
 
+
 class LoginScreen(Screen):
     pass
 
-class RectangleRaisedIconButton(MDRectangleFlatIconButton, RectangularElevationBehavior):
-    elevation_normal=16
-        
+
+class RectangleRaisedIconButton(
+    MDRectangleFlatIconButton, RectangularElevationBehavior
+):
+    elevation_normal = 16
+
+
 class LoginDemo(MDApp):
-    current_provider= ""
+    current_provider = ""
+
     def build(self):
         initialize_google(self.after_login, self.error_listener)
         initialize_fb(self.after_login, self.cancel_listener, self.error_listener)
         initialize_firebase(self.after_login, self.error_listener)
 
         return Builder.load_string(kv)
-    
+
     def on_resume(self):
         return True
-    
-    def on_start(self):
-        # If a user is logged in, send them to login page on start
-        # Since we've different providers here, you need to check them all &
-        # login using your priority if logged in with more than one provider
-        # Below is an example of fb login. Refer to other providers' doc for their
-        # implementations
 
-        #accessToken = AccessToken.getCurrentAccessToken()
-        #if accessToken and not accessToken.isExpired():
-        #    self.fb_login()
-        pass
-    
+    def on_start(self):
+
+        if auto_login(login_providers.google):
+            self.current_provider = login_providers.google
+        elif auto_login(login_providers.facebook):
+            self.current_provider = login_providers.facebook
+        elif auto_login(login_providers.github):
+            self.current_provider = login_providers.github
+        elif auto_login(login_providers.twitter):
+            self.current_provider = login_providers.twitter
+
     def fb_login(self, *args):
         login_facebook()
-        self.current_provider= login_providers.facebook
-        
+        self.current_provider = login_providers.facebook
+
     def gl_login(self, *args):
         login_google()
-        self.current_provider= login_providers.google
-    
+        self.current_provider = login_providers.google
+
     def git_login(self, *args):
         login_github()
-        self.current_provider= login_providers.github
+        self.current_provider = login_providers.github
 
     def twitter_login(self, *args):
         login_twitter()
-        self.current_provider= login_providers.twitter
+        self.current_provider = login_providers.twitter
 
     def logout_(self):
-        #logout(current_provider, self.after_logout)
-        if self.current_provider==login_providers.google:
+
+        if self.current_provider == login_providers.google:
             logout_google(self.after_logout)
-        if self.current_provider==login_providers.facebook:
+        if self.current_provider == login_providers.facebook:
             logout_facebook(self.after_logout)
-        if self.current_provider==login_providers.github:
+        if self.current_provider == login_providers.github:
             logout_github(self.after_logout)
-        if self.current_provider==login_providers.twitter:
+        if self.current_provider == login_providers.twitter:
             logout_twitter(self.after_logout)
 
     def after_login(self, name, email, photo_uri):
-        show_toast('Logged in using {}'.format(self.current_provider))
-        self.root.current= 'homescreen'
+        show_toast("Logged in using {}".format(self.current_provider))
+        self.root.current = "homescreen"
         self.update_ui(name, email, photo_uri)
 
     def after_logout(self):
-        self.update_ui('','','')
-        self.root.current= 'loginscreen'
-        show_toast('Logged out from {} login'.format(self.current_provider))
-    
+        self.update_ui("", "", "")
+        self.root.current = "loginscreen"
+        show_toast("Logged out from {} login".format(self.current_provider))
+
     def update_ui(self, name, email, photo_uri):
-        self.root.ids.home_screen.ids.user_photo.add_widget(AsyncImage(source=photo_uri, size_hint=(None, None), height=dp(60), width=dp(60)))
-        self.root.ids.home_screen.ids.user_name.title= "Welcome, {}".format(name)
-        self.root.ids.home_screen.ids.user_email.text= "Your Email: {}".format(email) if email else "Your Email: Could not fetch email"
+        self.root.ids.home_screen.ids.user_photo.add_widget(
+            AsyncImage(
+                source=photo_uri, size_hint=(None, None), height=dp(60), width=dp(60)
+            )
+        )
+        self.root.ids.home_screen.ids.user_name.title = "Welcome, {}".format(name)
+        self.root.ids.home_screen.ids.user_email.text = (
+            "Your Email: {}".format(email)
+            if email
+            else "Your Email: Could not fetch email"
+        )
 
     def cancel_listener(self):
         show_toast("Login cancelled")
-    
+
     def error_listener(self):
         show_toast("Error logging in.")
-    
+
     def send_to_github(self):
         intent = Intent()
         intent.setAction(Intent.ACTION_VIEW)
-        intent.setData(Uri.parse('https://github.com/shashi278/social-auth-kivy'))
+        intent.setData(Uri.parse("https://github.com/shashi278/social-auth-kivy"))
 
         context.startActivity(intent)
-
 
 
 if __name__ == "__main__":
