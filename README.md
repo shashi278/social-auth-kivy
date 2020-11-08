@@ -25,9 +25,22 @@ from kivyauth.google_auth import initialize_google, login_google, logout_google
 ```python
 def build(self):
   initialize_google(self.after_login, self.error_listener)
-  #...
 ```
-`after_login` is a function to be called upon successful login with `name`, `email`, and `photo url` of the user. So, create a success listener function which accepts three parameters and perform after-login stuffs. `error_listener` is called in case of any error and it doesn't accept any argument.
+`after_login` is a function to be called upon successful login with `name`, `email`, and `photo url` of the user. So, create a success listener function which accepts three parameters and perform after-login stuffs(like updating UI, etc.). `error_listener` is called in case of any error and it doesn't accept any argument.
+
+* You can also add auto-login( if the user is already logged in then directly move to after-login stuff) inside app's `on_start` method as below(mention only login providers you are using in your app):
+```python
+def on_start(self):
+
+    if auto_login(login_providers.google):
+        self.current_provider = login_providers.google
+    elif auto_login(login_providers.facebook):
+        self.current_provider = login_providers.facebook
+    elif auto_login(login_providers.github):
+        self.current_provider = login_providers.github
+    elif auto_login(login_providers.twitter):
+        self.current_provider = login_providers.twitter
+```
 
 * Next, call `login_google()` upon a button click to initiate login process.
 
@@ -49,10 +62,17 @@ requirements = python3,kivy,kivyauth
   * Individual login providers are moved into respective folders
   * Fix problem of not being able to use individual login methods
   * Now it's relatively easier to use the library
+
+#### v2.2
+  * Added Auto-login feature
+  * `login_providers` are now inside `kivyauth` rather than `kivyauth.providers`
   
 ### TODO:
-  * Auto login feature
   * Make it cross-platform
 
 ### Other
+
+**Contributing**: Contributions are more than welcome. Looking for contributions in making it cross-platform(specifically for iOS) and better documentation.
+
+
 Feel free to ping me or raise an issue if there's any difficulty in packaging it up.
