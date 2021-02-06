@@ -85,7 +85,7 @@ fullscreen = 0
 #android.presplash_color = #FFFFFF
 
 # (list) Permissions
-android.permissions = INTERNET
+android.permissions = INTERNET, ACCESS_NETWORK_STATE
 
 # (int) Target Android API, should be as high as possible.
 android.api = 29
@@ -158,7 +158,8 @@ android.minapi = 27
 # bootstrap)
 android.gradle_dependencies =   com.facebook.android:facebook-login:7.0.0,
                                 com.google.android.gms:play-services-auth:18.0.0,
-                                com.google.firebase:firebase-auth:19.3.1
+                                com.google.firebase:firebase-auth:19.3.1,
+                                com.newrelic.agent.android:android-agent:5.23.0
 
 # (list) add java compile options
 # this can for example be necessary when importing certain java libraries using the 'android.gradle_dependencies' option
@@ -168,14 +169,14 @@ android.gradle_dependencies =   com.facebook.android:facebook-login:7.0.0,
 # (list) Gradle repositories to add {can be necessary for some android.gradle_dependencies}
 # please enclose in double quotes 
 # e.g. android.gradle_repositories = "maven { url 'https://kotlin.bintray.com/ktor' }"
-#android.add_gradle_repositories =
+android.add_gradle_repositories = "mavenCentral()"
 
 # (list) packaging options to add 
 # see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.PackagingOptions.html
 # can be necessary to solve conflicts in gradle_dependencies
 # please enclose in double quotes 
 # e.g. android.add_packaging_options = "exclude 'META-INF/common.kotlin_module'", "exclude 'META-INF/*.kotlin_module'"
-#android.add_gradle_repositories =
+#android.add_packaging_options =
 
 # (list) Java classes to add as activities to the manifest.
 android.add_activites = com.facebook.FacebookActivity, com.facebook.CustomTabActivity
@@ -188,7 +189,7 @@ android.add_activites = com.facebook.FacebookActivity, com.facebook.CustomTabAct
 #android.ouya.icon.filename = %(source.dir)s/data/ouya_icon.png
 
 # (str) XML file to include as an intent filters in <activity> tag
-android.manifest.intent_filters = ../intents.xml
+android.manifest.intent_filters = intents.xml
 
 # (str) launchMode to set for the main activity
 #android.manifest.launch_mode = standard

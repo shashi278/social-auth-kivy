@@ -23,6 +23,7 @@ String = autoclass("java.lang.String")
 CharSequence = autoclass("java.lang.CharSequence")
 Intent = autoclass("android.content.Intent")
 Uri = autoclass("android.net.Uri")
+NewRelic = autoclass("com.newrelic.agent.android.NewRelic")
 
 PythonActivity = autoclass("org.kivy.android.PythonActivity")
 
@@ -182,6 +183,8 @@ class LoginDemo(MDApp):
         initialize_google(self.after_login, self.error_listener)
         initialize_fb(self.after_login, self.cancel_listener, self.error_listener)
         initialize_firebase(self.after_login, self.error_listener)
+
+        NewRelic.withApplicationToken("eu01xx3a293465cda73cd2f5b1154ed969b9af4b27-NRMA").start(context.getApplication())
 
         return Builder.load_string(kv)
 
