@@ -15,26 +15,26 @@ import random
 GOOGLE_CLIENT_ID = (
     "161589307268-3mk3igf1d0qh4rk03ldfm0u68g038h6t.apps.googleusercontent.com"
 )
-GOOGLE_CLIENT_SECRET = "mE3YsB5u4haMwq8P80xCs3g1"
+GOOGLE_CLIENT_SECRET = "Your secret"
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 # facebook configuration
 FACEBOOK_CLIENT_ID = "439926446854840"
-FACEBOOK_CLIENT_SECRET = "bfa21d5a50b7e51ff3eb961be6420183"
+FACEBOOK_CLIENT_SECRET = "Your secret"
 fb_authorization_endpoint = "https://www.facebook.com/v4.0/dialog/oauth?"
 fb_token_endpoint = "https://graph.facebook.com/v4.0/oauth/access_token?"
 fb_userinfo_endpoint = "https://graph.facebook.com/v4.0/me?"
 
 # github configuration
 GITHUB_CLIENT_ID = "33ffe92ab174c888f742"
-GITHUB_CLIENT_SECRET = "5abf88cb26d599abe46996dcf576e4273c3bbd7f"
+GITHUB_CLIENT_SECRET = "Your secret"
 git_authorization_endpoint = "https://github.com/login/oauth/authorize"
 git_token_endpoint = "https://github.com/login/oauth/access_token"
 git_userinfo_endpoint = "https://api.github.com/user"
 
 #twitter configuration
 TWITTER_CLIENT_ID = "3OLfWRx7NmfS90JkhNXWvSi8a"
-TWITTER_CLIENT_SECRET = "cOTkgNEbnWVrezCaD9h6RQLOOFLREnJI7rDDTfTibv6nuywSTZ"
+TWITTER_CLIENT_SECRET = "Your secret"
 tw_authorization_endpoint = "https://api.twitter.com/oauth/authorize"
 tw_token_endpoint = "https://api.twitter.com/oauth/access_token"
 tw_userinfo_endpoint = "https://api.twitter.com/user"
