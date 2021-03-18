@@ -9,7 +9,7 @@
 ![Demo Gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/master/demo/demo.gif)
 
 ##
-### KivyAuth Desktop Test Demo
+### ![KivyAuth for Desktop(Test)](https://github.com/shashi278/social-auth-kivy/tree/cross-platform) Demo
 ![Desktop_demo_test gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/cross-platform/demo/kivyauth_desktop_alpha.gif)
 
 ##
