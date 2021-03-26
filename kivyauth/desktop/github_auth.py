@@ -5,7 +5,8 @@ import webbrowser
 import random
 import re
 
-from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app
+from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app, _close_server_pls, port
+from kivy.app import App
 
 # github configuration
 GITHUB_CLIENT_ID = ""
@@ -28,7 +29,10 @@ __all__ = (
 
 def initialize_github(
     success_listener, error_listener, client_id=None, client_secret=None
-):
+):  
+    a = App.get_running_app()
+    a.bind(on_stop= lambda *args: _close_server_pls(port))
+    
     global event_success_listener
     event_success_listener = success_listener
 
@@ -47,7 +51,6 @@ def initialize_github(
 
 @app.route("/loginGithub")
 def loginGithub():
-
     request_uri = client_github.prepare_request_uri(
         git_authorization_endpoint,
         redirect_uri=request.base_url + "/callbackGithub",
@@ -95,7 +98,7 @@ def callbackGithub():
             userinfo_response["email"],
             userinfo_response["avatar_url"],
         )
-        return "Success using Github. Return to the application"
+        return "<h2>Success using Github. Return to the application</h2>"
 
     event_error_listener()
     return "User Email not available or not verified"

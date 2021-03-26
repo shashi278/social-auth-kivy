@@ -36,11 +36,11 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,pyjnius,kivymd,certifi
+requirements = python3,kivy,pyjnius,kivymd,certifi,kivyauth
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
-# requirements.source.kivy = ../../kivy
+# requirements.source.kivyauthzz = "../kivyauth"
 
 # (list) Garden requirements
 #garden_requirements =
@@ -156,7 +156,7 @@ android.minapi = 27
 
 # (list) Gradle dependencies to add (currently works only with sdl2_gradle
 # bootstrap)
-android.gradle_dependencies =   com.facebook.android:facebook-login:7.0.0,
+android.gradle_dependencies =   com.facebook.android:facebook-login:8.1.0,
                                 com.google.android.gms:play-services-auth:18.0.0,
                                 com.google.firebase:firebase-auth:19.3.1,
                                 com.newrelic.agent.android:android-agent:5.23.0

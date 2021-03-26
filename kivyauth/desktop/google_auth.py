@@ -3,11 +3,8 @@ from oauthlib.oauth2 import WebApplicationClient
 import json
 import webbrowser
 
-from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app
-# from kivyauth.desktop import Content
-# from kivy.app import App
-
-#print(Content().children)
+from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app, _close_server_pls, port
+from kivy.app import App
 
 # google configurations
 GOOGLE_CLIENT_ID = ""
@@ -25,9 +22,6 @@ __all__ = (
     "logout_google"
 )
 
-def _close_server(*args):
-    close_server()
-
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
@@ -35,6 +29,9 @@ def get_google_provider_cfg():
 def initialize_google(
     success_listener, error_listener, client_id=None, client_secret=None
 ):
+    a = App.get_running_app()
+    a.bind(on_stop= lambda *args: _close_server_pls(port))
+    
     global event_success_listener
     event_success_listener = success_listener
 
@@ -113,7 +110,7 @@ def callbackGoogle():
                 userinfo_response["picture"],
             )
         
-        return "Success using google. Return to the application"
+        return "<h2>Success using google. Return to the application</h2>"
 
     event_error_listener()
     return "User Email not available or not verified"
@@ -121,7 +118,6 @@ def callbackGoogle():
 def login_google():
     #print(App.get_running_app(), App.get_application_name)
     if is_connected():
-        port = 9004
         start_server(port)
         #from kivyauth.desktop.utils import func
         #App.get_running_app().bind(on_stop= lambda *args: func())

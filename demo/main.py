@@ -8,6 +8,7 @@ from kivy.uix.image import AsyncImage
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy import platform
+from kivy.clock import Clock
 from kivymd.app import MDApp
 from kivymd.uix.button import (MDRectangleFlatIconButton,
                                RectangularElevationBehavior)
@@ -27,19 +28,19 @@ else:
     from kivyauth.desktop.google_auth import *
     from kivyauth.desktop.github_auth import *
     from kivyauth.desktop.twitter_auth import *
+    from kivyauth.desktop import stop_login
 
-    from kivymd.uix.dialog import MDDialog
 
-    GOOGLE_CLIENT_ID = (
-    "161589307268-3mk3igf1d0qh4rk03ldfm0u68g038h6t.apps.googleusercontent.com"
-    )
-    GOOGLE_CLIENT_SECRET = "secret"
+GOOGLE_CLIENT_ID = (
+"161589307268-3mk3igf1d0qh4rk03ldfm0u68g038h6t.apps.googleusercontent.com"
+)
+GOOGLE_CLIENT_SECRET = ""
 
-    FACEBOOK_CLIENT_ID = "439926446854840"
-    FACEBOOK_CLIENT_SECRET = "super-secret"
+FACEBOOK_CLIENT_ID = "439926446854840"
+FACEBOOK_CLIENT_SECRET = ""
 
-    GITHUB_CLIENT_ID = "33ffe92ab174c888f742"
-    GITHUB_CLIENT_SECRET = "ultra-secret"
+GITHUB_CLIENT_ID = "52a40f6bbb7569e6bfbd"
+GITHUB_CLIENT_SECRET = ""
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
@@ -197,8 +198,25 @@ ScreenManager:
                     app.logout_()
 
 
+<Content>:
+    orientation: "vertical"
+    size_hint_y: None
+    height: "90dp"
 
+    AnchorLayout:
+        MDSpinner:
+            size_hint: None, None
+            size: dp(30), dp(30)
+            pos_hint: {'center_x': .5, 'center_y': .5}
+    
+    AnchorLayout:
+        MDLabel:
+            text: "Logging in..."
+            halign: "center"
 """
+
+class Content(BoxLayout):
+    pass
 
 class LoginScreen(Screen):
     pass
@@ -224,10 +242,24 @@ class LoginDemo(MDApp):
         
         #set_statusbar_color()
         tmp = Builder.load_string(kv)
+        if platform != "android":
+            from kivymd.uix.dialog import MDDialog
+            from kivymd.uix.button import MDFlatButton
+            btn = MDFlatButton(
+                                text="CANCEL", text_color=self.theme_cls.primary_color
+                            )
+            btn.bind(on_release= lambda *args: (stop_login(), self.dialog.dismiss()))
+            self.dialog = MDDialog(
+                        title="",
+                        size_hint_x= None,
+                        size_hint_y= None,
+                        width="250dp",
+                        type="custom",
+                        auto_dismiss=False,
+                        content_cls=Content(),
+                        buttons=[btn],
+                    )
         return tmp
-
-    def on_resume(self):
-        return True
 
     def on_start(self):
         # if platform == "android":
@@ -244,6 +276,14 @@ class LoginDemo(MDApp):
         # hex_color= '#%02x%02x%02x' % (int(primary_clr[0]*200), int(primary_clr[1]*200), int(primary_clr[2]*200))
         # set_statusbar_color()
         pass
+    
+    def show_login_progress(self):
+        if platform != "android":
+            self.dialog.open()
+    
+    def hide_login_progress(self):
+        if platform != "android":
+            self.dialog.dismiss()
 
     def fb_login(self, *args):
         # if platform != "android":
@@ -251,11 +291,15 @@ class LoginDemo(MDApp):
         login_facebook()
         self.current_provider = login_providers.facebook
 
+        self.show_login_progress()
+
     def gl_login(self, *args):
         # if platform != "android":
         #     self.dialog.open()
         login_google()
         self.current_provider = login_providers.google
+
+        self.show_login_progress()
 
     def git_login(self, *args):
         # if platform != "android":
@@ -263,11 +307,15 @@ class LoginDemo(MDApp):
         login_github()
         self.current_provider = login_providers.github
 
+        self.show_login_progress()
+
     def twitter_login(self, *args):
         # if platform != "android":
         #     self.dialog.open()
         login_twitter()
         self.current_provider = login_providers.twitter
+
+        self.show_login_progress()
 
     def logout_(self):
 
@@ -281,6 +329,7 @@ class LoginDemo(MDApp):
             logout_twitter(self.after_logout)
 
     def after_login(self, name, email, photo_uri):
+        self.hide_login_progress()
 
         if platform == "android":
             show_toast("Logged in using {}".format(self.current_provider))
@@ -298,6 +347,8 @@ class LoginDemo(MDApp):
             show_toast(text="Logged out from {} login".format(self.current_provider))
         else:
             Snackbar(text="Logged out from {} login".format(self.current_provider)).show()
+        
+        
 
     def update_ui(self, name, email, photo_uri):
         self.root.ids.home_screen.ids.user_photo.add_widget(
@@ -317,6 +368,8 @@ class LoginDemo(MDApp):
             show_toast("Error logging in.")
         else:
             Snackbar(text="Error logging in. Check connection or try again.").show()
+        
+        Clock.schedule_once(lambda *args: self.hide_login_progress())
 
     def send_to_github(self):
         if platform == "android":

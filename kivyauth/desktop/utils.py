@@ -4,6 +4,7 @@ import os
 import threading
 import socket
 from kivy.clock import Clock
+import random
 
 # # twitter configuration
 # TWITTER_CLIENT_ID = ""
@@ -20,25 +21,38 @@ PATH = os.path.dirname(__file__)
 cert_path = os.path.join(PATH, "cert.pem")
 key_path = os.path.join(PATH, "key.pem")
 
-e = threading.Event()
+port = 9004
+ran_num = random.randint(1111, 9999)
+
+def _start_server(*args):
+    try:
+        app.run(
+                    host="127.0.0.1", port=port, ssl_context=(cert_path, key_path)
+                )
+    except OSError:
+        pass
 
 def start_server(port):
     thread = threading.Thread(
-        target=lambda: app.run(
-            host="127.0.0.1", port=port, ssl_context=(cert_path, key_path)
-        )
+        target= _start_server
     )
     
     thread.start()
-    #Clock.schedule_once(close_server, 60)
-    #Clock.create_trigger(close_server, 60)
 
-
+@app.route("/kill{}".format(ran_num))
 def close_server(*args,**kwargs):
     func = request.environ.get("werkzeug.server.shutdown")
     if func is None:
         raise RuntimeError("Not running with the Werkzeug Server")
     func()
+    
+    return ""
+
+def _close_server_pls(port, *args):
+    try:
+        requests.get("https://127.0.0.1:{}/kill{}".format(port, ran_num), verify=False)
+    except requests.exceptions.ConnectionError:
+        pass
             
 
 

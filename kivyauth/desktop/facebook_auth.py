@@ -4,7 +4,8 @@ import json
 import webbrowser
 import random
 
-from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app
+from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app, _close_server_pls, port
+from kivy.app import App
 
 # facebook configuration
 FACEBOOK_CLIENT_ID = ""
@@ -27,6 +28,9 @@ __all__ = (
 def initialize_fb(
     success_listener, error_listener, client_id=None, client_secret=None
 ):
+    a = App.get_running_app()
+    a.bind(on_stop= lambda *args: _close_server_pls(port))
+    
     global event_success_listener
     event_success_listener = success_listener
 
@@ -108,7 +112,7 @@ def callbackFacebook():
             userinfo_response["email"],
             userinfo_response["picture"]["data"]["url"],
         )
-        return "Success using facebook. Return to the app"
+        return "<h2>Success using facebook. Return to the app</h2>"
 
     event_error_listener()
     return "User Email not available or not verified"
