@@ -10,63 +10,56 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy import platform
 from kivy.clock import Clock
 from kivymd.app import MDApp
-from kivymd.uix.button import (MDRectangleFlatIconButton,
-                               RectangularElevationBehavior)
+from kivymd.uix.button import MDRectangleFlatIconButton, RectangularElevationBehavior
 from kivymd.uix.snackbar import Snackbar
 
-from kivyauth import auto_login, login_providers
-if platform == "android":
-    from android.runnable import run_on_ui_thread
-    from jnius import autoclass, cast
-
-    from kivyauth.android.facebook_auth import *
-    from kivyauth.android.google_auth import *
-    from kivyauth.android.github_auth import *
-    from kivyauth.android.twitter_auth import *
-else:
-    from kivyauth.desktop.facebook_auth import *
-    from kivyauth.desktop.google_auth import *
-    from kivyauth.desktop.github_auth import *
-    from kivyauth.desktop.twitter_auth import *
-    from kivyauth.desktop import stop_login
-
+from kivyauth.google_auth import initialize_google, login_google, logout_google
+from kivyauth.facebook_auth import initialize_fb, login_facebook, logout_facebook
+from kivyauth.github_auth import initialize_github, login_github, logout_github
+from kivyauth.twitter_auth import initialize_twitter, login_twitter, logout_twitter
+from kivyauth.utils import stop_login
+from kivyauth.utils import login_providers, auto_login
 
 GOOGLE_CLIENT_ID = (
-"161589307268-3mk3igf1d0qh4rk03ldfm0u68g038h6t.apps.googleusercontent.com"
+    "161589307268-3mk3igf1d0qh4rk03ldfm0u68g038h6t.apps.googleusercontent.com"
 )
-GOOGLE_CLIENT_SECRET = ""
+GOOGLE_CLIENT_SECRET = "secret"
 
 FACEBOOK_CLIENT_ID = "439926446854840"
-FACEBOOK_CLIENT_SECRET = ""
+FACEBOOK_CLIENT_SECRET = "super-secret"
 
 GITHUB_CLIENT_ID = "52a40f6bbb7569e6bfbd"
-GITHUB_CLIENT_SECRET = ""
+GITHUB_CLIENT_SECRET = "ultra-secret"
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
 if platform == "android":
+    from android.runnable import run_on_ui_thread
+    from jnius import autoclass, cast
+
     Toast = autoclass("android.widget.Toast")
     String = autoclass("java.lang.String")
     CharSequence = autoclass("java.lang.CharSequence")
     Intent = autoclass("android.content.Intent")
     Uri = autoclass("android.net.Uri")
     NewRelic = autoclass("com.newrelic.agent.android.NewRelic")
-    LayoutParams= autoclass('android.view.WindowManager$LayoutParams')
-    AndroidColor= autoclass('android.graphics.Color')
+    LayoutParams = autoclass("android.view.WindowManager$LayoutParams")
+    AndroidColor = autoclass("android.graphics.Color")
 
     PythonActivity = autoclass("org.kivy.android.PythonActivity")
 
     context = PythonActivity.mActivity
 
-
     @run_on_ui_thread
     def show_toast(text):
-        t = Toast.makeText(context, cast(CharSequence, String(text)), Toast.LENGTH_SHORT)
+        t = Toast.makeText(
+            context, cast(CharSequence, String(text)), Toast.LENGTH_SHORT
+        )
         t.show()
 
     @run_on_ui_thread
     def set_statusbar_color():
-        window= context.getWindow()
+        window = context.getWindow()
         window.addFlags(LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.setStatusBarColor(AndroidColor.TRANSPARENT)
 
@@ -218,6 +211,10 @@ ScreenManager:
 class Content(BoxLayout):
     pass
 
+class Content(BoxLayout):
+    pass
+
+
 class LoginScreen(Screen):
     pass
 
@@ -232,33 +229,48 @@ class LoginDemo(MDApp):
     current_provider = ""
 
     def build(self):
-        initialize_google(self.after_login, self.error_listener, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
-        initialize_fb(self.after_login, self.error_listener, FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET)
-        initialize_github(self.after_login, self.error_listener, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
-        
+        initialize_google(
+            self.after_login,
+            self.error_listener,
+            GOOGLE_CLIENT_ID,
+            GOOGLE_CLIENT_SECRET,
+        )
+        initialize_fb(
+            self.after_login,
+            self.error_listener,
+            FACEBOOK_CLIENT_ID,
+            FACEBOOK_CLIENT_SECRET,
+        )
+        initialize_github(
+            self.after_login,
+            self.error_listener,
+            GITHUB_CLIENT_ID,
+            GITHUB_CLIENT_SECRET,
+        )
 
         if platform == "android":
-            NewRelic.withApplicationToken("eu01xx3a293465cda73cd2f5b1154ed969b9af4b27-NRMA").start(context.getApplication())
-        
-        #set_statusbar_color()
+            NewRelic.withApplicationToken(
+                "eu01xx3a293465cda73cd2f5b1154ed969b9af4b27-NRMA"
+            ).start(context.getApplication())
+
+        # set_statusbar_color()
         tmp = Builder.load_string(kv)
         if platform != "android":
             from kivymd.uix.dialog import MDDialog
             from kivymd.uix.button import MDFlatButton
-            btn = MDFlatButton(
-                                text="CANCEL", text_color=self.theme_cls.primary_color
-                            )
-            btn.bind(on_release= lambda *args: (stop_login(), self.dialog.dismiss()))
+
+            btn = MDFlatButton(text="CANCEL", text_color=self.theme_cls.primary_color)
+            btn.bind(on_release=lambda *args: (stop_login(), self.dialog.dismiss()))
             self.dialog = MDDialog(
-                        title="",
-                        size_hint_x= None,
-                        size_hint_y= None,
-                        width="250dp",
-                        type="custom",
-                        auto_dismiss=False,
-                        content_cls=Content(),
-                        buttons=[btn],
-                    )
+                title="",
+                size_hint_x=None,
+                size_hint_y=None,
+                width="250dp",
+                type="custom",
+                auto_dismiss=False,
+                content_cls=Content(),
+                buttons=[btn],
+            )
         return tmp
 
     def on_start(self):
@@ -271,16 +283,15 @@ class LoginDemo(MDApp):
         #         self.current_provider = login_providers.github
         #     elif auto_login(login_providers.twitter):
         #         self.current_provider = login_providers.twitter
-        
         # primary_clr= [ 108/255, 52/255, 131/255 ]
         # hex_color= '#%02x%02x%02x' % (int(primary_clr[0]*200), int(primary_clr[1]*200), int(primary_clr[2]*200))
         # set_statusbar_color()
         pass
-    
+
     def show_login_progress(self):
         if platform != "android":
             self.dialog.open()
-    
+
     def hide_login_progress(self):
         if platform != "android":
             self.dialog.dismiss()
@@ -335,7 +346,6 @@ class LoginDemo(MDApp):
             show_toast("Logged in using {}".format(self.current_provider))
         else:
             Snackbar(text="Logged in using {}".format(self.current_provider)).show()
-        
 
         self.root.current = "homescreen"
         self.update_ui(name, email, photo_uri)
@@ -346,9 +356,9 @@ class LoginDemo(MDApp):
         if platform == "android":
             show_toast(text="Logged out from {} login".format(self.current_provider))
         else:
-            Snackbar(text="Logged out from {} login".format(self.current_provider)).show()
-        
-        
+            Snackbar(
+                text="Logged out from {} login".format(self.current_provider)
+            ).show()
 
     def update_ui(self, name, email, photo_uri):
         self.root.ids.home_screen.ids.user_photo.add_widget(
@@ -368,7 +378,6 @@ class LoginDemo(MDApp):
             show_toast("Error logging in.")
         else:
             Snackbar(text="Error logging in. Check connection or try again.").show()
-        
         Clock.schedule_once(lambda *args: self.hide_login_progress())
 
     def send_to_github(self):

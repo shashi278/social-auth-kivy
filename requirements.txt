@@ -1,4 +1,0 @@
-kivy
-pyjnius
-kivymd
-certifi

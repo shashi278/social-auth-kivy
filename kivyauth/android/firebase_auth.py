@@ -12,14 +12,6 @@ context = PythonActivity.mActivity
 event_success_listener = None
 event_error_listener = None
 
-__all__ = (
-    "initialize_firebase",
-    "login_github",
-    "login_twitter",
-    "logout_github",
-    "logout_twitter",
-)
-
 
 class OnSuccessListener(PythonJavaClass):
     __javainterfaces__ = ["com/google/android/gms/tasks/OnSuccessListener"]
@@ -81,18 +73,15 @@ def firebase_login(provider):
         task = pendingResultTask.addOnSuccessListener(
             OnSuccessListener(event_success_listener)
         )
-        task = task.addOnFailureListener(
-            OnFailureListener(event_error_listener))
+        task = task.addOnFailureListener(OnFailureListener(event_error_listener))
     else:
         # There's no pending result so you need to start the sign-in flow.
 
         task = FirebaseAuth.startActivityForSignInWithProvider(
             context, provider.build()
         )
-        task = task.addOnSuccessListener(
-            OnSuccessListener(event_success_listener))
-        task = task.addOnFailureListener(
-            OnFailureListener(event_error_listener))
+        task = task.addOnSuccessListener(OnSuccessListener(event_success_listener))
+        task = task.addOnFailureListener(OnFailureListener(event_error_listener))
 
 
 def firebase_logout(after_logout):

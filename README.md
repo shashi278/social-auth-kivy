@@ -9,14 +9,41 @@
 ![Demo Gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/master/demo/demo.gif)
 
 ##
-### ![KivyAuth for Desktop(Test)](https://github.com/shashi278/social-auth-kivy/tree/cross-platform) Demo
+### KivyAuth Desktop Test Demo
 ![Desktop_demo_test gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/cross-platform/demo/kivyauth_desktop_alpha.gif)
 
 ##
+### Changelog
+#### v2.3.1 - KivyAuth cross-platform
+  * Kivyauth APIs are now platform-independent
+  * Desktop support for linux, win and possibly mac
+
+
+#### v2.3 - KivyAuth cross-platform
+  * Desktop support added(in alpha)
+  * All android auths are inside `kivyauth.android` while those for desktops are inside `kivyauth.desktop`
+
+
+#### v2.2
+  * Added Auto-login feature
+  * `login_providers` are now inside `kivyauth` rather than `kivyauth.providers`
+
+
+#### v2.0
+  * Individual login providers are moved into respective folders
+  * Fix problem of not being able to use individual login methods
+  * Now it's relatively easier to use the library
 
 ### How to use
 
-#### Note:
+### Instruction for testing out KivyAuth for Desktop:
+* Clone this repo (because it has not been pushed to pip yet)
+* `cd` to repo directory and run `python setup.py install`
+* `cd` to `demo` and update `main.py` with your OAuth secrets
+* Run `python main.py`
+* It's that easy!
+
+#### Note(for android):
   Make sure you go through the [prerequisites](https://github.com/shashi278/social-auth-kivy/blob/master/docs/prerequisites.md)
   for the login methods you're going to integrate in your application.
 
@@ -64,15 +91,7 @@ requirements = python3,kivy,kivyauth
 
 * See [demo](demo/) for reference.
 
-### Changelog
-#### v2.0
-  * Individual login providers are moved into respective folders
-  * Fix problem of not being able to use individual login methods
-  * Now it's relatively easier to use the library
-
-#### v2.2
-  * Added Auto-login feature
-  * `login_providers` are now inside `kivyauth` rather than `kivyauth.providers`
+##
   
 ### TODO:
   * Make it cross-platform
