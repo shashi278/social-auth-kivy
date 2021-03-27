@@ -14,9 +14,13 @@
 
 ##
 ### Changelog
-#### KivyAuth for Desktop(test) API Changes - Important
+#### v2.3.1 - KivyAuth for cross-platform
+  * Desktop support added
+  * 
+#### v2.3 - KivyAuth cross-platform
+  * Desktop support added
   * All android auths are inside `kivyauth.android` while those for desktops are inside `kivyauth.desktop`
-  * Have a look at platform-wise [import statements](https://github.com/shashi278/social-auth-kivy/blob/2995df6f4c27f264a986492599a94a79b84faabe/demo/main.py#L17)
+
 
 #### v2.2
   * Added Auto-login feature
