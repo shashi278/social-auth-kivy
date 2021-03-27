@@ -14,37 +14,30 @@ from kivymd.uix.button import (MDRectangleFlatIconButton,
                                RectangularElevationBehavior)
 from kivymd.uix.snackbar import Snackbar
 
-from kivyauth import auto_login, login_providers
-if platform == "android":
-    from android.runnable import run_on_ui_thread
-    from jnius import autoclass, cast
-
-    from kivyauth.android.facebook_auth import *
-    from kivyauth.android.google_auth import *
-    from kivyauth.android.github_auth import *
-    from kivyauth.android.twitter_auth import *
-else:
-    from kivyauth.desktop.facebook_auth import *
-    from kivyauth.desktop.google_auth import *
-    from kivyauth.desktop.github_auth import *
-    from kivyauth.desktop.twitter_auth import *
-    from kivyauth.desktop import stop_login
-
+from kivyauth.google_auth import initialize_google, login_google, logout_google
+from kivyauth.facebook_auth import initialize_fb, login_facebook, logout_facebook
+from kivyauth.github_auth import initialize_github, login_github, logout_github
+from kivyauth.twitter_auth import initialize_twitter, login_twitter, logout_twitter
+from kivyauth.utils import stop_login
+from kivyauth.utils import login_providers, auto_login
 
 GOOGLE_CLIENT_ID = (
 "161589307268-3mk3igf1d0qh4rk03ldfm0u68g038h6t.apps.googleusercontent.com"
 )
-GOOGLE_CLIENT_SECRET = ""
+GOOGLE_CLIENT_SECRET = "secret"
 
 FACEBOOK_CLIENT_ID = "439926446854840"
-FACEBOOK_CLIENT_SECRET = ""
+FACEBOOK_CLIENT_SECRET = "super-secret"
 
 GITHUB_CLIENT_ID = "52a40f6bbb7569e6bfbd"
-GITHUB_CLIENT_SECRET = ""
+GITHUB_CLIENT_SECRET = "ultra-secret"
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
 if platform == "android":
+    from android.runnable import run_on_ui_thread
+    from jnius import autoclass, cast
+
     Toast = autoclass("android.widget.Toast")
     String = autoclass("java.lang.String")
     CharSequence = autoclass("java.lang.CharSequence")
