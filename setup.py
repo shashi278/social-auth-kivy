@@ -39,7 +39,9 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: Android :: Linux :: Windows :: Mac",
+        "Operating System :: Android",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: OS Independent"
     ],
     install_requires=["kivy>=2.0.0", "oauthlib", "flask", "requests"]
     if not is_android()
