@@ -1,29 +1,26 @@
 cache: pip
-
 matrix:
   fast_finish: true
   include:
-    - name: "Black"
-      env: RUN=black
-      language: python
-      python: 3.7
-      os: linux
-      dist: bionic
-
+  - name: Black
+    env: RUN=black
+    language: python
+    python: 3.7
+    os: linux
+    dist: bionic
 install:
 - pip install pycodestyle
 script:
 - pycodestyle kivyauth/android/__init__.py
-
 after_failure:
-  - sleep 10;
-  - echo == End ==
-
+- sleep 10;
+- echo == End ==
 deploy:
   skip_existing: true
   provider: pypi
-  user: "__token__"
-  password: "pypi-AgEIcHlwaS5vcmcCJDdjNzhmNmZkLTQ5MzUtNGE0Ni1iNTUwLTQ4Y2RjYmVkZDU0MwACOXsicGVybWlzc2lvbnMiOiB7InByb2plY3RzIjogWyJraXZ5YXV0aCJdfSwgInZlcnNpb24iOiAxfQAABiC3qmk_EMFJB8QQ9g_-emWJ6ECmkCcnCUWk3TTdbLMIJg"
-  distributions: "sdist bdist_wheel"
+  user: __token__
+  password:
+    secure: HDX4vTR4+shTPAc2+SPOE5Z+/5eZkvlX0JtDY+UniEbdSUougWxS1Z+TxWSlQQyL1LE0wB3Wxt1EimBYPDgKu+AiIhSXkjonGvnD4txXTV1qolDOudNzWndu+yPc2AnZi8eWaRGE+s7cJjWVeW7ddCZGfCS2WycSLz3MtGXJfPOz4bB+UhAWc+uAj8VBu72ZeyU8QFRvYgCbeHVAhFcx4U1t6gju601/n3eoylJsUb4Dx/ssCARMplHjW81MvGCX7jbuBadB/mOoo7FdQ42PCzPtDIxeyORR8T6gKcWWga+IWswf8bWau//ry/walbWWqegIam7XeXQK8a1nDMqGGJ0Sn4J5jpJS8wVnmK6Dtw6VALtmPTUd+S7p1pnaDCvEF79zv33qowrVbe4hgHPsX+RWHVs1Vkv2MJ+WtUoDuQizeK7pi+DIpDkHXSZCZRSd2m1pDEz51DjDhKJVJfKmuypIaf2yRtiNpnJgtqfSC9Hk+ErcZW9C311oyFzHIvTlYjlQfepfl3cUImwBoj6FTIUPovLbnn6eXh6k45GltBLG5mOt8nWpFvhHDNf+kcCotyqxTpS46a5p0p4rpsURELSXLsCUely1g1xqEkXLWVeu793qBZweyahiAp9iH+gx+za8xjip5Rty5uUxITuPbv1ITU6nEshQKvbrNfwwALA=
+  distributions: sdist bdist_wheel
   on:
     tags: true
