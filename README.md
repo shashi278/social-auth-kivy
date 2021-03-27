@@ -30,6 +30,12 @@
 
 ### How to use
 
+### Instruction for testing out KivyAuth for Desktop:
+* Clone this repo
+* `cd` to repo directory and run `python setup.py install`
+* `cd` to demo and update `main.py` with your OAuth secrets
+* Run `python main.py`
+
 #### Note:
   Make sure you go through the [prerequisites](https://github.com/shashi278/social-auth-kivy/blob/master/docs/prerequisites.md)
   for the login methods you're going to integrate in your application.
