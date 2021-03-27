@@ -93,7 +93,7 @@ class PythonFacebookCallback(PythonJavaClass):
         self.error_listener()
 
 
-def initialize_fb(success_listener, error_listener, *args):
+def initialize_fb(success_listener, error_listener, *args, **kwargs):
     """
     Function to initialize facebook login.
     Must be called inside `build` method of kivy App before actual login.

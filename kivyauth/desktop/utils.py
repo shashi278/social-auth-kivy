@@ -48,6 +48,9 @@ def close_server(*args,**kwargs):
     
     return ""
 
+def stop_login(*args):
+    _close_server_pls(port)
+
 def _close_server_pls(port, *args):
     try:
         requests.get("https://127.0.0.1:{}/kill{}".format(port, ran_num), verify=False)

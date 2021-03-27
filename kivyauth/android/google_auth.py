@@ -51,7 +51,7 @@ def _call_success(account):
         return True
 
 
-def initialize_google(success_listener, error_listener, *args):
+def initialize_google(success_listener, error_listener, *args, **kwargs):
     """
     Function to initialize google login.
     Must be called inside `build` method of kivy App before actual login.

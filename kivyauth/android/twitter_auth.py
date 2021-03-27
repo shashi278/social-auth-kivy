@@ -7,7 +7,7 @@ __all__ = (
     "logout_twitter"
 )
 
-def initialize_twitter(succes_listener, error_listener, *args):
+def initialize_twitter(succes_listener, error_listener, *args, **kwargs):
     initialize_firebase(succes_listener, error_listener)
 
 def login_twitter():
