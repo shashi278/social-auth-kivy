@@ -13,7 +13,7 @@ matrix:
 install:
 - pip install pycodestyle
 script:
-- pycodestyle kivyauth/*
+- pycodestyle kivyauth/android/__init__.py
 
 after_failure:
   - sleep 10;
@@ -23,7 +23,7 @@ deploy:
   skip_existing: true
   provider: pypi
   user: "__token__"
-  password: "pypi-AgEIcHlwaS5vcmcCJDRjNDhkMTM0LTJlYzAtNDQwZC1hOWU4LThhMjdhMmM4MDk4MgACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYgC9wx3oWQ4w-Pd-K7uxk-4iC-hhaFFUvgbz12qqNMBdo"
+  password: ${{ secrets.PASSWORD }}
   distributions: "sdist bdist_wheel"
   on:
     tags: true
