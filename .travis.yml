@@ -23,7 +23,7 @@ deploy:
   skip_existing: true
   provider: pypi
   user: "__token__"
-  password: "pypi-AgEIcHlwaS5vcmcCJDkxMmVkZDAwLWFjM2EtNGRkYi1hMmVjLTc1YmQ3ODM2ODZjNwACOXsicGVybWlzc2lvbnMiOiB7InByb2plY3RzIjogWyJraXZ5YXV0aCJdfSwgInZlcnNpb24iOiAxfQAABiAzj2AyyqS1S7SEhGjvNU2FaRp_iZxnT2W8aId98mAeZw"
+  password: "pypi-AgEIcHlwaS5vcmcCJDdjNzhmNmZkLTQ5MzUtNGE0Ni1iNTUwLTQ4Y2RjYmVkZDU0MwACOXsicGVybWlzc2lvbnMiOiB7InByb2plY3RzIjogWyJraXZ5YXV0aCJdfSwgInZlcnNpb24iOiAxfQAABiC3qmk_EMFJB8QQ9g_-emWJ6ECmkCcnCUWk3TTdbLMIJg"
   distributions: "sdist bdist_wheel"
   on:
     tags: true
