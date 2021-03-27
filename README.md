@@ -14,11 +14,13 @@
 
 ##
 ### Changelog
-#### v2.3.1 - KivyAuth for cross-platform
-  * Desktop support added
-  * 
+#### v2.3.1 - KivyAuth cross-platform
+  * Kivyauth APIs are now platform-independent
+  * Desktop support for linux, win and possibly mac
+
+
 #### v2.3 - KivyAuth cross-platform
-  * Desktop support added
+  * Desktop support added(in alpha)
   * All android auths are inside `kivyauth.android` while those for desktops are inside `kivyauth.desktop`
 
 
@@ -35,12 +37,13 @@
 ### How to use
 
 ### Instruction for testing out KivyAuth for Desktop:
-* Clone this repo
+* Clone this repo (because it has not been pushed to pip yet)
 * `cd` to repo directory and run `python setup.py install`
-* `cd` to demo and update `main.py` with your OAuth secrets
+* `cd` to `demo` and update `main.py` with your OAuth secrets
 * Run `python main.py`
+* It's that easy!
 
-#### Note:
+#### Note(for android):
   Make sure you go through the [prerequisites](https://github.com/shashi278/social-auth-kivy/blob/master/docs/prerequisites.md)
   for the login methods you're going to integrate in your application.
 
