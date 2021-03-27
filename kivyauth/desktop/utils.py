@@ -24,39 +24,39 @@ key_path = os.path.join(PATH, "key.pem")
 port = 9004
 ran_num = random.randint(1111, 9999)
 
+
 def _start_server(*args):
     try:
-        app.run(
-                    host="127.0.0.1", port=port, ssl_context=(cert_path, key_path)
-                )
+        app.run(host="127.0.0.1", port=port, ssl_context=(cert_path, key_path))
     except OSError:
         pass
 
+
 def start_server(port):
-    thread = threading.Thread(
-        target= _start_server
-    )
-    
+    thread = threading.Thread(target=_start_server)
+
     thread.start()
 
+
 @app.route("/kill{}".format(ran_num))
-def close_server(*args,**kwargs):
+def close_server(*args, **kwargs):
     func = request.environ.get("werkzeug.server.shutdown")
     if func is None:
         raise RuntimeError("Not running with the Werkzeug Server")
     func()
-    
+
     return ""
+
 
 def stop_login(*args):
     _close_server_pls(port)
+
 
 def _close_server_pls(port, *args):
     try:
         requests.get("https://127.0.0.1:{}/kill{}".format(port, ran_num), verify=False)
     except requests.exceptions.ConnectionError:
         pass
-            
 
 
 def is_connected():

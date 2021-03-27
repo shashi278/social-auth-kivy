@@ -5,7 +5,16 @@ import webbrowser
 import random
 import re
 
-from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app, _close_server_pls, port
+from kivyauth.desktop.utils import (
+    close_server,
+    request,
+    redirect,
+    is_connected,
+    start_server,
+    app,
+    _close_server_pls,
+    port,
+)
 from kivy.app import App
 
 # github configuration
@@ -20,19 +29,15 @@ client_github = None
 event_success_listener = None
 event_error_listener = None
 
-__all__ = (
-    "initialize_github",
-    "login_github",
-    "logout_github"
-)
+__all__ = ("initialize_github", "login_github", "logout_github")
 
 
 def initialize_github(
     success_listener, error_listener, client_id=None, client_secret=None
-):  
+):
     a = App.get_running_app()
-    a.bind(on_stop= lambda *args: _close_server_pls(port))
-    
+    a.bind(on_stop=lambda *args: _close_server_pls(port))
+
     global event_success_listener
     event_success_listener = success_listener
 
@@ -113,6 +118,7 @@ def login_github():
 
     else:
         event_error_listener()
+
 
 def logout_github(after_logout):
     """

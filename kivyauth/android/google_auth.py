@@ -33,15 +33,13 @@ class GoogleActivityListener:
                 _call_success(account)
 
             except Exception as e:
-                Logger.info(
-                    "KivyAuth: Error signing in using Google. {}".format(e))
+                Logger.info("KivyAuth: Error signing in using Google. {}".format(e))
                 self.error_listener()
 
 
 def _call_success(account):
     if account:
-        Logger.info(
-            "KivyAuth: Google Login success. Calling success listener.")
+        Logger.info("KivyAuth: Google Login success. Calling success listener.")
         event_success_listener(
             account.getDisplayName(),
             account.getEmail(),

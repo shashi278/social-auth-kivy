@@ -1,14 +1,18 @@
 from kivy.logger import Logger
-from kivyauth.android.firebase_auth import firebase_login, firebase_logout, initialize_firebase, OAuthProvider, auto_firebase as auto_twitter
-
-__all__ = (
-    "initialize_twitter",
-    "login_twitter",
-    "logout_twitter"
+from kivyauth.android.firebase_auth import (
+    firebase_login,
+    firebase_logout,
+    initialize_firebase,
+    OAuthProvider,
+    auto_firebase as auto_twitter,
 )
+
+__all__ = ("initialize_twitter", "login_twitter", "logout_twitter")
+
 
 def initialize_twitter(succes_listener, error_listener, *args, **kwargs):
     initialize_firebase(succes_listener, error_listener)
+
 
 def login_twitter():
     """

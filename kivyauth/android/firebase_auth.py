@@ -73,18 +73,15 @@ def firebase_login(provider):
         task = pendingResultTask.addOnSuccessListener(
             OnSuccessListener(event_success_listener)
         )
-        task = task.addOnFailureListener(
-            OnFailureListener(event_error_listener))
+        task = task.addOnFailureListener(OnFailureListener(event_error_listener))
     else:
         # There's no pending result so you need to start the sign-in flow.
 
         task = FirebaseAuth.startActivityForSignInWithProvider(
             context, provider.build()
         )
-        task = task.addOnSuccessListener(
-            OnSuccessListener(event_success_listener))
-        task = task.addOnFailureListener(
-            OnFailureListener(event_error_listener))
+        task = task.addOnSuccessListener(OnSuccessListener(event_success_listener))
+        task = task.addOnFailureListener(OnFailureListener(event_error_listener))
 
 
 def firebase_logout(after_logout):

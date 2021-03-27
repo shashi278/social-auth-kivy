@@ -3,7 +3,16 @@ from oauthlib.oauth2 import WebApplicationClient
 import json
 import webbrowser
 
-from kivyauth.desktop.utils import close_server, request, redirect, is_connected, start_server, app, _close_server_pls, port
+from kivyauth.desktop.utils import (
+    close_server,
+    request,
+    redirect,
+    is_connected,
+    start_server,
+    app,
+    _close_server_pls,
+    port,
+)
 from kivy.app import App
 
 # google configurations
@@ -16,11 +25,8 @@ client_google = None
 event_success_listener = None
 event_error_listener = None
 
-__all__ = (
-    "initialize_google",
-    "login_google",
-    "logout_google"
-)
+__all__ = ("initialize_google", "login_google", "logout_google")
+
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
@@ -30,8 +36,8 @@ def initialize_google(
     success_listener, error_listener, client_id=None, client_secret=None
 ):
     a = App.get_running_app()
-    a.bind(on_stop= lambda *args: _close_server_pls(port))
-    
+    a.bind(on_stop=lambda *args: _close_server_pls(port))
+
     global event_success_listener
     event_success_listener = success_listener
 
@@ -105,27 +111,29 @@ def callbackGoogle():
         close_server()
 
         event_success_listener(
-                userinfo_response["name"],
-                userinfo_response["email"],
-                userinfo_response["picture"],
-            )
-        
+            userinfo_response["name"],
+            userinfo_response["email"],
+            userinfo_response["picture"],
+        )
+
         return "<h2>Success using google. Return to the application</h2>"
 
     event_error_listener()
     return "User Email not available or not verified"
 
+
 def login_google():
-    #print(App.get_running_app(), App.get_application_name)
+    # print(App.get_running_app(), App.get_application_name)
     if is_connected():
         start_server(port)
-        #from kivyauth.desktop.utils import func
-        #App.get_running_app().bind(on_stop= lambda *args: func())
+        # from kivyauth.desktop.utils import func
+        # App.get_running_app().bind(on_stop= lambda *args: func())
 
         webbrowser.open("https://127.0.0.1:{}/loginGoogle".format(port), 1, False)
 
     else:
         event_error_listener()
+
 
 def logout_google(after_logout):
     """

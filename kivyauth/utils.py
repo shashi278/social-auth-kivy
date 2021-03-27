@@ -1,11 +1,14 @@
 from kivy.utils import platform
 
-if platform=="android":
+if platform == "android":
+
     def stop_login(*args):
         pass
 
-elif platform!="ios":
+
+elif platform != "ios":
     from kivyauth.desktop.utils import stop_login
+
 
 class LoginProviders:
     google = "google"
@@ -43,6 +46,6 @@ def auto_login(provider):
             from kivyauth.android.twitter_auth import auto_twitter
 
             return auto_twitter()
-    
+
     else:
         raise NotImplementedError("Not yet availabe for desktop")

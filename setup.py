@@ -4,16 +4,16 @@ import os, re
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
 def is_android():
-    if 'ANDROID_BOOTLOGO' in os.environ:
+    if "ANDROID_BOOTLOGO" in os.environ:
         return True
     return False
 
+
 def get_version() -> str:
     """Get __version__ from __init__.py file."""
-    version_file = os.path.join(
-        os.path.dirname(__file__), "kivyauth", "__init__.py"
-    )
+    version_file = os.path.join(os.path.dirname(__file__), "kivyauth", "__init__.py")
     version_file_data = open(version_file, "rt", encoding="utf-8").read()
     version_regex = r"(?<=^__version__ = ['\"])[^'\"]+(?=['\"]$)"
     try:
@@ -22,13 +22,12 @@ def get_version() -> str:
     except IndexError:
         raise ValueError(f"Unable to find version string in {version_file}.")
 
+
 setup(
     name="KivyAuth",
     version=get_version(),
     packages=["kivyauth"],
-    package_data={
-        "kivyauth": ["*.py", "desktop/*", "android/*"],
-    },
+    package_data={"kivyauth": ["*.py", "desktop/*", "android/*"],},
     # metadata to display on PyPI
     author="Shashi Ranjan",
     author_email="shashiranjankv@gmail.com",
@@ -40,8 +39,10 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: Android :: Desktop",
+        "Operating System :: Android :: Linux :: Windows :: Mac",
     ],
-    install_requires=["kivy>=2.0.0", "oauthlib", "flask", "requests"] if not is_android() else [],
+    install_requires=["kivy>=2.0.0", "oauthlib", "flask", "requests"]
+    if not is_android()
+    else [],
     python_requires=">=3.6",
 )
