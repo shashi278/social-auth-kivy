@@ -1,4 +1,7 @@
 ### For Google Login
+* Goto https://console.cloud.google.com/
+* While on cloud console, head to `APIs & Services` > `Credentials` > Click on `+ Create Credentials` and select `OAuth client ID`
+* On the following screen select `Android` under `Application Type` field and follow on-screen instructions to fill all the fields and create a client ID for Android.
 * Declare Google Play services as a gradle dependency in your `buildozer.spec` file:
 
 ```spec
