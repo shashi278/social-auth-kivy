@@ -37,16 +37,12 @@
 ### How to use
 
 ### Instruction for testing out KivyAuth for Desktop:
-* ~~Clone this repo (because it has not been pushed to pip yet)~~
-* ~~`cd` to repo directory and run `python setup.py install`~~
-* ~~`cd` to `demo` and update `main.py` with your OAuth secrets~~
-* ~~Run `python main.py`~~
 * pip install kivyauth
 * **Make Sure you've created OAuth apps and have their CLIENT_ID and CLIENT_SECRET handy before running demo application**
 
-#### Note(for android):
+### Note(for android):
   Make sure you go through the [prerequisites](https://github.com/shashi278/social-auth-kivy/blob/master/docs/prerequisites.md)
-  for the login methods you're going to integrate in your application.
+  for the login methods you're going to integrate in your application before moving further
 
 #
 The example below shows integrating google login. Similarly other login methods can also be used.
