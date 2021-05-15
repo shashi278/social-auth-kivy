@@ -14,6 +14,10 @@
 
 ##
 ### Changelog
+#### v2.3.2
+  *  Fixed crashing when user doesn't have a photo
+
+
 #### v2.3.1 - KivyAuth cross-platform
   * Kivyauth APIs are now platform-independent
   * Desktop support for linux, win and possibly mac
