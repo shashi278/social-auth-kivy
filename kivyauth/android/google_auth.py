@@ -43,9 +43,8 @@ def _call_success(account):
         event_success_listener(
             account.getDisplayName(),
             account.getEmail(),
-            account.getPhotoUrl().toString() if account.getPhotoUrl()!=None else account.getPhotoUrl(),
+            account.getPhotoUrl().toString() if account.getPhotoUrl() else '',
         )
-        Logger.info("KivyAuth: inside here")
         return True
 
 

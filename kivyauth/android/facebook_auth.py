@@ -55,7 +55,7 @@ class PythonGraphJSONObjectCallback(PythonJavaClass):
             self.complete_listener(
                 me.optString("first_name") + " " + me.optString("last_name"),
                 me.optString("email"),
-                uri.toString(),
+                uri.toString() if uri else '',
             )
 
 

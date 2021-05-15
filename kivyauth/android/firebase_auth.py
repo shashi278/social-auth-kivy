@@ -45,7 +45,9 @@ class OnFailureListener(PythonJavaClass):
 
 def _call_success(user):
     event_success_listener(
-        user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString()
+        user.getDisplayName(),
+        user.getEmail(),
+        user.getPhotoUrl().toString() if user.getPhotoUrl() else ''
     )
 
 
