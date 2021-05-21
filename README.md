@@ -8,6 +8,8 @@
 ###
 ![Demo Gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/master/demo/demo.gif)
 
+<a href='https://play.google.com/store/apps/details?id=com.watney.glogin' ><img src='https://raw.githubusercontent.com/steverichey/google-play-badge-svg/266d2b2df26f10d3c00b8129a0bd9f6da6b19f00/img/en_get.svg' alt='Get it on Playstore' width=200/> </a>
+
 ##
 ### KivyAuth Desktop Test Demo
 ![Desktop_demo_test gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/cross-platform/demo/kivyauth_desktop_alpha.gif)
