@@ -43,7 +43,7 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "Operating System :: OS Independent"
     ],
-    install_requires=["kivy>=2.0.0", "oauthlib", "flask", "requests"]
+    install_requires=["kivy>=2.0.0", "oauthlib", "werkzeug==2.0.3", "flask==2.0.3", "requests"]
     if not is_android()
     else [],
     python_requires=">=3.6",
