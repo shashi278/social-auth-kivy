@@ -13,15 +13,17 @@ from kivyauth.desktop.utils import (
     app,
     _close_server_pls,
     port,
+    stop_login,
 )
 from kivy.app import App
+from kivy.clock import Clock
 
 # facebook configuration
 FACEBOOK_CLIENT_ID = ""
 FACEBOOK_CLIENT_SECRET = ""
-fb_authorization_endpoint = "https://www.facebook.com/v4.0/dialog/oauth?"
-fb_token_endpoint = "https://graph.facebook.com/v4.0/oauth/access_token?"
-fb_userinfo_endpoint = "https://graph.facebook.com/v4.0/me?"
+fb_authorization_endpoint = "https://www.facebook.com/v15.0/dialog/oauth?"
+fb_token_endpoint = "https://graph.facebook.com/v15.0/oauth/access_token?"
+fb_userinfo_endpoint = "https://graph.facebook.com/v15.0/me?"
 
 client_facebook = None
 
@@ -83,13 +85,6 @@ def callbackFacebook():
     # send the request and get the response
     token_response = requests.post(token_url, headers=headers, data=body)
 
-    token_url = (
-        fb_token_endpoint
-        + "client_id={}"
-        + "&client_secret={}"
-        + "&grant_type=client_credentials"
-    ).format(FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET)
-
     # send the request and get the response
     # app_token_response = requests.get(token_url, headers=headers, data=body)
 
@@ -107,16 +102,17 @@ def callbackFacebook():
 
     # make the request and get the response
     userinfo_response = requests.get(request_uri, headers=headers, data=None).json()
+    stop_login()
 
     # parse the information
     if userinfo_response.get("id"):
-        close_server()
-        event_success_listener(
+        Clock.schedule_once(lambda *args: event_success_listener(
             userinfo_response["name"],
             userinfo_response["email"],
             userinfo_response["picture"]["data"]["url"],
-        )
-        return "<h2>Success using facebook. Return to the app</h2>"
+        ), 0)
+
+        return "<h2>Logged in using Facebook. Return back to the Kivy application</h2>"
 
     event_error_listener()
     return "User Email not available or not verified"
@@ -124,11 +120,8 @@ def callbackFacebook():
 
 def login_facebook():
     if is_connected():
-        port = 9004
         start_server(port)
-
         webbrowser.open("https://127.0.0.1:{}/loginFacebook".format(port), 1, False)
-
     else:
         event_error_listener()
 

@@ -12,8 +12,10 @@ from kivyauth.desktop.utils import (
     app,
     _close_server_pls,
     port,
+    stop_login,
 )
 from kivy.app import App
+from kivy.clock import Clock
 
 # google configurations
 GOOGLE_CLIENT_ID = ""
@@ -53,7 +55,6 @@ def initialize_google(
     global client_google
     client_google = WebApplicationClient(GOOGLE_CLIENT_ID)
 
-
 @app.route("/loginGoogle")
 def loginGoogle():
     # takeout auth endpoint url from google login
@@ -68,7 +69,6 @@ def loginGoogle():
     )
 
     return redirect(request_uri)
-
 
 @app.route("/loginGoogle/callbackGoogle")
 def callbackGoogle():
@@ -105,35 +105,28 @@ def callbackGoogle():
     uri, headers, body = client_google.add_token(userinfo_endpoint)
 
     userinfo_response = requests.get(uri, headers=headers, data=body).json()
+    stop_login()
 
     # parse the information
     if userinfo_response.get("email_verified"):
-        close_server()
-
-        event_success_listener(
+        Clock.schedule_once(lambda *args: event_success_listener(
             userinfo_response["name"],
             userinfo_response["email"],
             userinfo_response["picture"],
-        )
+        ), 0)
 
-        return "<h2>Success using google. Return to the application</h2>"
+        return "<h2>Logged in using Google. Return back to the Kivy application</h2>"
 
     event_error_listener()
     return "User Email not available or not verified"
 
-
 def login_google():
-    # print(App.get_running_app(), App.get_application_name)
     if is_connected():
         start_server(port)
-        # from kivyauth.desktop.utils import func
-        # App.get_running_app().bind(on_stop= lambda *args: func())
-
         webbrowser.open("https://127.0.0.1:{}/loginGoogle".format(port), 1, False)
 
     else:
         event_error_listener()
-
 
 def logout_google(after_logout):
     """

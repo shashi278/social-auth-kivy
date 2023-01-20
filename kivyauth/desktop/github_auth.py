@@ -6,7 +6,6 @@ import random
 import re
 
 from kivyauth.desktop.utils import (
-    close_server,
     request,
     redirect,
     is_connected,
@@ -14,8 +13,10 @@ from kivyauth.desktop.utils import (
     app,
     _close_server_pls,
     port,
+    stop_login,
 )
 from kivy.app import App
+from kivy.clock import Clock
 
 # github configuration
 GITHUB_CLIENT_ID = ""
@@ -53,7 +54,6 @@ def initialize_github(
     global client_github
     client_github = WebApplicationClient(GITHUB_CLIENT_ID)
 
-
 @app.route("/loginGithub")
 def loginGithub():
     request_uri = client_github.prepare_request_uri(
@@ -63,7 +63,6 @@ def loginGithub():
         state="".join([random.choice("abcdefghijklmnopqrstuvwxyz") for _ in range(20)]),
     )
     return redirect(request_uri)
-
 
 @app.route("/loginGithub/callbackGithub")
 def callbackGithub():
@@ -94,31 +93,26 @@ def callbackGithub():
     userinfo_response = requests.get(
         git_userinfo_endpoint, headers=headers, data=body
     ).json()
+    stop_login()
 
     # parse the information
     if userinfo_response.get("id"):
-        close_server()
-        event_success_listener(
+        Clock.schedule_once(lambda *args: event_success_listener(
             userinfo_response["name"],
             userinfo_response["email"],
             userinfo_response["avatar_url"],
-        )
-        return "<h2>Success using Github. Return to the application</h2>"
+        ), 0)
+        return "<h2>Logged in using Github. Return back to the Kivy application</h2>"
 
     event_error_listener()
     return "User Email not available or not verified"
 
-
 def login_github():
     if is_connected():
-        port = 9004
         start_server(port)
-
         webbrowser.open("https://127.0.0.1:{}/loginGithub".format(port), 1, False)
-
     else:
         event_error_listener()
-
 
 def logout_github(after_logout):
     """
