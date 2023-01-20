@@ -5,48 +5,38 @@
 #### *Integrate Google, Facebook, Github &amp; Twitter login in kivy applications*
 [![build](https://travis-ci.org/shashi278/social-auth-kivy.svg?branch=master)](https://travis-ci.org/github/shashi278/social-auth-kivy/) [![Python 3.6](https://img.shields.io/pypi/pyversions/kivymd)](https://www.python.org/downloads/release/python-360/) [![pypi](https://img.shields.io/pypi/v/kivyauth)](https://pypi.org/project/KivyAuth/) [![license](https://img.shields.io/pypi/l/kivyauth)](https://github.com/shashi278/social-auth-kivy/blob/master/LICENSE) [![format](https://img.shields.io/pypi/format/kivyauth)](https://pypi.org/project/KivyAuth/#modal-close) [![downloads](https://img.shields.io/pypi/dm/kivyauth)](https://pypi.org/project/KivyAuth/) [![code size](https://img.shields.io/github/languages/code-size/shashi278/social-auth-kivy)]() [![repo size](https://img.shields.io/github/repo-size/shashi278/social-auth-kivy)]()
 
-###
+### KivyAuth on Android
 ![Demo Gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/master/demo/demo.gif)
 
 <a href='https://play.google.com/store/apps/details?id=com.watney.glogin' ><img src='https://raw.githubusercontent.com/steverichey/google-play-badge-svg/266d2b2df26f10d3c00b8129a0bd9f6da6b19f00/img/en_get.svg' alt='Get it on Playstore' width=200/> </a>
 
 ##
-### KivyAuth Desktop Test Demo
+### KivyAuth on Desktop
 ![Desktop_demo_test gif](https://raw.githubusercontent.com/shashi278/social-auth-kivy/cross-platform/demo/kivyauth_desktop_alpha.gif)
 
+
+### Run [demo](demo/) app on desktop:
+ * **Make Sure you've created OAuth apps and have their CLIENT_ID and CLIENT_SECRET handy before running demo application**
+ * Create an .env file in the app directory with below format:
+  ```properties
+  GOOGLE_CLIENT_ID=<Your-client-id-from-google-cloud-console>
+  GOOGLE_CLIENT_SECRET=<Your-Client-Secret>
+
+  FACEBOOK_CLIENT_ID=<Your-Facebook-Client-id>
+  FACEBOOK_CLIENT_SECRET=<Your-Facebook-Client-secret>
+
+  GITHUB_CLIENT_ID=<Github-Client-id>
+  GITHUB_CLIENT_SECRET=<Github-Client-secret>
+
+  ```
+
 ##
-### Changelog
-#### v2.3.2
-  *  Fixed crashing when user doesn't have a photo
+## How to use
 
+### Instruction for using KivyAuth on Desktop:
+* pip install kivyauth==2.3.3
 
-#### v2.3.1 - KivyAuth cross-platform
-  * Kivyauth APIs are now platform-independent
-  * Desktop support for linux, win and possibly mac
-
-
-#### v2.3 - KivyAuth cross-platform
-  * Desktop support added(in alpha)
-  * All android auths are inside `kivyauth.android` while those for desktops are inside `kivyauth.desktop`
-
-
-#### v2.2
-  * Added Auto-login feature
-  * `login_providers` are now inside `kivyauth` rather than `kivyauth.providers`
-
-
-#### v2.0
-  * Individual login providers are moved into respective folders
-  * Fix problem of not being able to use individual login methods
-  * Now it's relatively easier to use the library
-
-### How to use
-
-### Instruction for testing out KivyAuth for Desktop:
-* pip install kivyauth
-* **Make Sure you've created OAuth apps and have their CLIENT_ID and CLIENT_SECRET handy before running demo application**
-
-### Note(for android):
+### Note for android:
   Make sure you go through the [prerequisites](https://github.com/shashi278/social-auth-kivy/blob/master/docs/prerequisites.md)
   for the login methods you're going to integrate in your application before moving further
 
@@ -89,15 +79,43 @@ logout_google(self.after_logout)
 
 * Make sure to include `kivyauth` as a requirement in the buildozer.spec file
 ```spec
-requirements = python3,kivy,kivyauth
+requirements = python3,kivy,kivyauth==2.3.3
 ```
 
-* See [demo](demo/) for reference.
+
+##  
+### TODO:
+  * Support iOS
 
 ##
-  
-### TODO:
-  * Make it cross-platform
+### Changelog
+#### v2.3.3
+  *  Fixed werkzeug server not shutting down
+
+
+#### v2.3.2
+  *  Fixed crashing when user doesn't have a photo
+
+
+#### v2.3.1 - KivyAuth cross-platform
+  * Kivyauth APIs are now platform-independent
+  * Desktop support for linux, win and possibly mac
+
+
+#### v2.3 - KivyAuth cross-platform
+  * Desktop support added(in alpha)
+  * All android auths are inside `kivyauth.android` while those for desktops are inside `kivyauth.desktop`
+
+
+#### v2.2
+  * Added Auto-login feature
+  * `login_providers` are now inside `kivyauth` rather than `kivyauth.providers`
+
+
+#### v2.0
+  * Individual login providers are moved into respective folders
+  * Fix problem of not being able to use individual login methods
+  * Now it's relatively easier to use the library
 
 ### Other
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
@@ -105,5 +123,4 @@ requirements = python3,kivy,kivyauth
 **Contributing**: Contributions are more than welcome. Looking for contributions in making it cross-platform(specifically for iOS) and better documentation.
 
 
-Feel free to ping me or raise an issue if there's any difficulty in packaging it up.
-      
+Feel free to ping me or raise an issue if you want to talk about this project or Kivy in general.
