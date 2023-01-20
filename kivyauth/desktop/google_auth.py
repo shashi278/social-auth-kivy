@@ -4,7 +4,6 @@ import json
 import webbrowser
 
 from kivyauth.desktop.utils import (
-    close_server,
     request,
     redirect,
     is_connected,

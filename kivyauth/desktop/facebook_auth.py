@@ -5,7 +5,6 @@ import webbrowser
 import random
 
 from kivyauth.desktop.utils import (
-    close_server,
     request,
     redirect,
     is_connected,
