@@ -1,7 +1,6 @@
 import os
-import sys
+from dotenv import load_dotenv
 
-import certifi
 from kivy.lang.builder import Builder
 from kivy.metrics import dp
 from kivy.uix.image import AsyncImage
@@ -10,8 +9,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy import platform
 from kivy.clock import Clock
 from kivymd.app import MDApp
-from kivymd.uix.button import MDRectangleFlatIconButton, RectangularElevationBehavior
+from kivymd.uix.button import MDRectangleFlatIconButton
 from kivymd.uix.snackbar import Snackbar
+from kivymd.uix.behaviors.elevation import CommonElevationBehavior
 
 from kivyauth.google_auth import initialize_google, login_google, logout_google
 from kivyauth.facebook_auth import initialize_fb, login_facebook, logout_facebook
@@ -20,18 +20,7 @@ from kivyauth.twitter_auth import initialize_twitter, login_twitter, logout_twit
 from kivyauth.utils import stop_login
 from kivyauth.utils import login_providers, auto_login
 
-GOOGLE_CLIENT_ID = (
-    "161589307268-3mk3igf1d0qh4rk03ldfm0u68g038h6t.apps.googleusercontent.com"
-)
-GOOGLE_CLIENT_SECRET = "secret"
-
-FACEBOOK_CLIENT_ID = "439926446854840"
-FACEBOOK_CLIENT_SECRET = "super-secret"
-
-GITHUB_CLIENT_ID = "52a40f6bbb7569e6bfbd"
-GITHUB_CLIENT_SECRET = "ultra-secret"
-
-os.environ["SSL_CERT_FILE"] = certifi.where()
+load_dotenv()
 
 if platform == "android":
     from android.runnable import run_on_ui_thread
@@ -80,7 +69,7 @@ ScreenManager:
     BoxLayout:
         orientation:"vertical"
 
-        MDToolbar:
+        MDTopAppBar:
             title: "KivyAuth Demo"
             elevation:9
             opposite_colos: True
@@ -159,7 +148,7 @@ ScreenManager:
         id: main_box
         orientation:"vertical"
 
-        MDToolbar:
+        MDTopAppBar:
             id: user_name
             title: ""
             elevation: 9
@@ -220,7 +209,7 @@ class LoginScreen(Screen):
 
 
 class RectangleRaisedIconButton(
-    MDRectangleFlatIconButton, RectangularElevationBehavior
+    MDRectangleFlatIconButton, CommonElevationBehavior
 ):
     pass
 
@@ -232,28 +221,24 @@ class LoginDemo(MDApp):
         initialize_google(
             self.after_login,
             self.error_listener,
-            GOOGLE_CLIENT_ID,
-            GOOGLE_CLIENT_SECRET,
+            os.getenv("GOOGLE_CLIENT_ID"),
+            os.getenv("GOOGLE_CLIENT_SECRET"),
         )
         initialize_fb(
             self.after_login,
             self.error_listener,
-            FACEBOOK_CLIENT_ID,
-            FACEBOOK_CLIENT_SECRET,
+            os.getenv("FACEBOOK_CLIENT_ID"),
+            os.getenv("FACEBOOK_CLIENT_SECRET"),
         )
         initialize_github(
             self.after_login,
             self.error_listener,
-            GITHUB_CLIENT_ID,
-            GITHUB_CLIENT_SECRET,
+            os.getenv("GITHUB_CLIENT_ID"),
+            os.getenv("GITHUB_CLIENT_SECRET"),
         )
 
         if platform == "android":
-            NewRelic.withApplicationToken(
-                "eu01xx3a293465cda73cd2f5b1154ed969b9af4b27-NRMA"
-            ).start(context.getApplication())
-
-        # set_statusbar_color()
+            set_statusbar_color()
         tmp = Builder.load_string(kv)
         if platform != "android":
             from kivymd.uix.dialog import MDDialog
@@ -274,18 +259,18 @@ class LoginDemo(MDApp):
         return tmp
 
     def on_start(self):
-        # if platform == "android":
-        #     if auto_login(login_providers.google):
-        #         self.current_provider = login_providers.google
-        #     elif auto_login(login_providers.facebook):
-        #         self.current_provider = login_providers.facebook
-        #     elif auto_login(login_providers.github):
-        #         self.current_provider = login_providers.github
-        #     elif auto_login(login_providers.twitter):
-        #         self.current_provider = login_providers.twitter
-        # primary_clr= [ 108/255, 52/255, 131/255 ]
-        # hex_color= '#%02x%02x%02x' % (int(primary_clr[0]*200), int(primary_clr[1]*200), int(primary_clr[2]*200))
-        # set_statusbar_color()
+        if platform == "android":
+            if auto_login(login_providers.google):
+                self.current_provider = login_providers.google
+            elif auto_login(login_providers.facebook):
+                self.current_provider = login_providers.facebook
+            elif auto_login(login_providers.github):
+                self.current_provider = login_providers.github
+            elif auto_login(login_providers.twitter):
+                self.current_provider = login_providers.twitter
+            primary_clr= [ 108/255, 52/255, 131/255 ]
+            hex_color= '#%02x%02x%02x' % (int(primary_clr[0]*200), int(primary_clr[1]*200), int(primary_clr[2]*200))
+            set_statusbar_color()
         pass
 
     def show_login_progress(self):
@@ -297,39 +282,26 @@ class LoginDemo(MDApp):
             self.dialog.dismiss()
 
     def fb_login(self, *args):
-        # if platform != "android":
-        #     self.dialog.open()
         login_facebook()
         self.current_provider = login_providers.facebook
-
         self.show_login_progress()
 
     def gl_login(self, *args):
-        # if platform != "android":
-        #     self.dialog.open()
         login_google()
         self.current_provider = login_providers.google
-
         self.show_login_progress()
 
     def git_login(self, *args):
-        # if platform != "android":
-        #     self.dialog.open()
         login_github()
         self.current_provider = login_providers.github
-
         self.show_login_progress()
 
     def twitter_login(self, *args):
-        # if platform != "android":
-        #     self.dialog.open()
         login_twitter()
         self.current_provider = login_providers.twitter
-
         self.show_login_progress()
 
     def logout_(self):
-
         if self.current_provider == login_providers.google:
             logout_google(self.after_logout)
         if self.current_provider == login_providers.facebook:
@@ -345,7 +317,7 @@ class LoginDemo(MDApp):
         if platform == "android":
             show_toast("Logged in using {}".format(self.current_provider))
         else:
-            Snackbar(text="Logged in using {}".format(self.current_provider)).show()
+            Snackbar(text="Logged in using {}".format(self.current_provider)).open()
 
         self.root.current = "homescreen"
         self.update_ui(name, email, photo_uri)
@@ -358,7 +330,7 @@ class LoginDemo(MDApp):
         else:
             Snackbar(
                 text="Logged out from {} login".format(self.current_provider)
-            ).show()
+            ).open()
 
     def update_ui(self, name, email, photo_uri):
         self.root.ids.home_screen.ids.user_photo.add_widget(

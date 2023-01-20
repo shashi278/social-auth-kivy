@@ -158,8 +158,7 @@ android.minapi = 27
 # bootstrap)
 android.gradle_dependencies =   com.facebook.android:facebook-login:8.1.0,
                                 com.google.android.gms:play-services-auth:18.0.0,
-                                com.google.firebase:firebase-auth:19.3.1,
-                                com.newrelic.agent.android:android-agent:5.23.0
+                                com.google.firebase:firebase-auth:19.3.1
 
 # (list) add java compile options
 # this can for example be necessary when importing certain java libraries using the 'android.gradle_dependencies' option
