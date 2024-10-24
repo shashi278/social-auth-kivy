@@ -219,7 +219,7 @@ class LoginDemo(MDApp):
 
     def build(self):
         initialize_google(
-            self.after_login,
+            self.google_after_login,
             self.error_listener,
             os.getenv("GOOGLE_CLIENT_ID"),
             os.getenv("GOOGLE_CLIENT_SECRET"),
@@ -321,6 +321,26 @@ class LoginDemo(MDApp):
 
         self.root.current = "homescreen"
         self.update_ui(name, email, photo_uri)
+
+    def google_after_login(self, *args):
+        self.hide_login_progress()
+
+        if platform == 'android':
+            keys = ['sub', 'name', 'email', 'family_name', 'given_name',  'picture']
+            user_dict = dict(zip(keys, args))
+            user_data = user_dict
+            show_toast("Logged in using {}".format(self.current_provider))
+        else:
+            user_data = args[0]
+            Snackbar(text="Logged in using {}".format(self.current_provider)).open()
+
+        user_id = user_data['sub']
+        user_name = user_data['name']
+        user_email = user_data['email']
+        user_pic = user_data['picture']
+
+        self.root.current = "homescreen"
+        self.update_ui(user_name, user_email, user_pic)
 
     def after_logout(self):
         self.update_ui("", "", "")

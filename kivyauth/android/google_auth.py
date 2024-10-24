@@ -41,8 +41,11 @@ def _call_success(account):
     if account:
         Logger.info("KivyAuth: Google Login success. Calling success listener.")
         event_success_listener(
+            account.getId(),
             account.getDisplayName(),
             account.getEmail(),
+            account.getFamilyName(),
+            account.getGivenName(),
             account.getPhotoUrl().toString() if account.getPhotoUrl() else '',
         )
         return True

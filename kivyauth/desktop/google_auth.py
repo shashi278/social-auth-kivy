@@ -108,10 +108,9 @@ def callbackGoogle():
 
     # parse the information
     if userinfo_response.get("email_verified"):
+        print(userinfo_response)
         Clock.schedule_once(lambda *args: event_success_listener(
-            userinfo_response["name"],
-            userinfo_response["email"],
-            userinfo_response["picture"],
+            userinfo_response
         ), 0)
 
         return "<h2>Logged in using Google. Return back to the Kivy application</h2>"
